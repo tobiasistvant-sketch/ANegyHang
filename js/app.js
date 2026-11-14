@@ -3,6 +3,8 @@
   'use strict';
   const content = window.NegyHangContent;
   const engine = window.NegyHangState;
+  const version = window.NegyHangVersion;
+  const versionLabel = version && /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.test(version.version) ? `v${version.version}` : '';
   const main = document.getElementById('main-content');
   if (!content || !engine) {
     main.textContent = 'A történet egyik fájlja nem töltődött be. Kérjük, frissítsd az oldalt.';
@@ -48,7 +50,7 @@
     return `<div class="decision-pair"><section class="decision-box"><h2>Első megérzésed</h2><p><strong>${state.initialChoice}</strong> · ${escape(choice(state.initialChoice).text)}</p></section><section class="decision-box"><h2>Átgondolt döntésed</h2><p><strong>${state.finalChoice}</strong> · ${escape(choice(state.finalChoice).text)}</p></section></div><dl class="summary-list"><div><dt>Változtattál?</dt><dd>${state.initialChoice === state.finalChoice ? 'Nem.' : 'Igen.'}</dd></div><div><dt>Ami leginkább hatott rád</dt><dd>${escape(influence().text)}</dd></div></dl>`;
   }
   function renderStart() {
-    return `<section class="hero"><div class="hero-copy"><p class="eyebrow">Interaktív döntéstörténet · XI. osztály</p><h1 class="hero-title" id="screen-title" tabindex="-1">A NÉGY HANG</h1><h2 class="hero-subtitle">${escape(content.subtitle)}</h2><p class="lead">Először az első megérzésedre hallgatsz. Aztán négy nézőpontot ismersz meg. A végső döntést te hozod meg.</p><p class="story-label">A megtalált pénztárca</p><div class="actions">${button('Kezdjük a történetet', 'start')}</div><p class="session-note">A haladásod ezen a böngészőlapon újratöltés után is megmarad. A lap bezárásakor a munkamenet véget ér.</p></div><div class="hero-art">${wallet()}<div class="voice-roster">${content.voices.map(voice => `<div class="voice-mini" style="${voiceStyle(voice)}"><span class="voice-mini-icon">${icon(voice.icon)}</span><span>${escape(voice.name)}</span></div>`).join('')}</div></div></section><div class="feature-grid"><section class="feature-card">${icon('exchange')}<h2>Két döntés</h2><p>Az első megérzésed és az átgondolt választásod külön is megmarad.</p></section><section class="feature-card">${icon('mixed')}<h2>Négy nézőpont</h2><p>Figyeld meg, mi befolyásol, amikor választanod kell!</p></section><section class="feature-card">${icon('notes')}<h2>Saját felismerés</h2><p>Nincs pontozás. A történet a személyes mérlegelésedet segíti.</p></section></div>`;
+    return `<section class="hero"><div class="hero-copy"><p class="eyebrow">Interaktív döntéstörténet · XI. osztály</p><h1 class="hero-title" id="screen-title" tabindex="-1">A NÉGY HANG</h1><h2 class="hero-subtitle">${escape(content.subtitle)}</h2><p class="lead">Először az első megérzésedre hallgatsz. Aztán négy nézőpontot ismersz meg. A végső döntést te hozod meg.</p><p class="story-label">A megtalált pénztárca</p><div class="actions">${button('Kezdjük a történetet', 'start')}</div><p class="session-note">A haladásod ezen a böngészőlapon újratöltés után is megmarad. A lap bezárásakor a munkamenet véget ér.</p><p class="app-version" data-app-version hidden></p></div><div class="hero-art">${wallet()}<div class="voice-roster">${content.voices.map(voice => `<div class="voice-mini" style="${voiceStyle(voice)}"><span class="voice-mini-icon">${icon(voice.icon)}</span><span>${escape(voice.name)}</span></div>`).join('')}</div></div></section><div class="feature-grid"><section class="feature-card">${icon('exchange')}<h2>Két döntés</h2><p>Az első megérzésed és az átgondolt választásod külön is megmarad.</p></section><section class="feature-card">${icon('mixed')}<h2>Négy nézőpont</h2><p>Figyeld meg, mi befolyásol, amikor választanod kell!</p></section><section class="feature-card">${icon('notes')}<h2>Saját felismerés</h2><p>Nincs pontozás. A történet a személyes mérlegelésedet segíti.</p></section></div>`;
   }
   function renderSituation() {
     return `${heading('A történet kezdete', story().title)}<div class="content-grid"><article class="story-card"><div class="story-text">${paragraphs(story().intro)}</div><p class="story-question">${escape(story().question)}</p><div class="actions">${button('Meghozom az első döntésem')}</div></article><aside class="context-card">${wallet()}<p class="eyebrow">Hazafelé · A buszmegálló</p><ul class="context-facts"><li><strong>500 lej</strong> a pénztárcában</li><li>Személyi igazolvány és két bankkártya</li><li>Néhány perc a busz érkezéséig</li></ul></aside></div>`;
@@ -121,6 +123,11 @@
     const screens = { start: renderStart, situation: renderSituation, initial: () => renderDecision(false), voices: renderVoice, final: () => renderDecision(true), influence: renderInfluence, continuation: renderContinuation, biblical: renderBiblical, teaching: renderTeaching, reflection: renderReflection, summary: renderSummary };
     main.innerHTML = screens[state.step]();
     main.dataset.step = state.step;
+    document.querySelectorAll('[data-app-version]').forEach(label => {
+      label.textContent = versionLabel;
+      label.hidden = !versionLabel;
+      label.setAttribute('aria-label', `Alkalmazás verziója: ${versionLabel}`);
+    });
     const takeaway = document.getElementById('takeaway');
     if (takeaway) takeaway.value = state.takeaway;
     const summary = document.getElementById('takeaway-summary');

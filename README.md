@@ -26,6 +26,21 @@ A nyilvános repositoryban a **Settings → Pages → Build and deployment** ré
 
 A GitHub a sikeres publikálás után megjeleníti az oldal címét. A projekt gyökérében lévő `.nojekyll` jelzi, hogy közvetlen statikus kiszolgálásra készült. A fejlesztés nem igényel automatikus külső telepítést.
 
+## Verziójelzés
+
+Az alkalmazás verziójának egyetlen központi forrása a `package.json` **`version`** mezője, `MAJOR.MINOR.PATCH` formátumban. A kezdőképernyőn és minden képernyő láblécében ugyanaz a diszkrét `v…` jelzés szerepel.
+
+A következő kiadáshoz például:
+
+```sh
+npm version 0.1.2 --no-git-tag-version
+npm test
+```
+
+Az npm `version` életciklus-parancsa automatikusan létrehozza a böngésző által közvetlenül betöltött `js/version.js` metaadatát. Ha a `package.json`-t kézzel módosítod, futtasd az `npm run version:sync` parancsot, és az npm lockfile verzióadatait is tartsd szinkronban. A generált fájlt ne szerkeszd kézzel; a `package.json`, `package-lock.json` és `js/version.js` fájlokat együtt commitold. Az `npm test` előellenőrzése megáll, ha a böngészős metaadat elavult. A játék futás közben nem kér verzióadatot külső szolgáltatástól, és nem igényel fordítást vagy Node.js-t.
+
+A GitHub Pages a `main` ág gyökerében lévő, commitolt fájlokat publikálja. Az új verziójelzés a megfelelő commit sikeres Pages-közzététele után jelenik meg; pusztán egy helyi verziófrissítés még nem módosítja az élő oldalt. Commitazonosító szándékosan nem szerepel a felületen: a jelenlegi, ágból történő statikus közzététel mellett egy kézzel beírt hash nem igazolná megbízhatóan a ténylegesen kiszolgált kiadást. Ehhez később ellenőrzött kiadási metaadatot előállító publikálási folyamat szükséges.
+
 ## A működő folyamat
 
 - Nyitólap és az élethelyzet bemutatása.
@@ -56,6 +71,7 @@ A közös eszközt a következő tanuló előtt az **Újrakezdés** művelettel 
 - `js/content.js`: a történet, hangok, befejezések, bibliai tanítások és reflexiós kérdések.
 - `js/state.js`: tiszta állapotgép, érvényességi feltételek, mentés és helyreállítás.
 - `js/app.js`: a felület és eseményei; a szöveges tananyag adatból származik.
+- `js/version.js`: a központi verzióból generált statikus metaadat; `scripts/sync-version.cjs`: generálás és ellenőrzés.
 - `assets/`: saját SVG-jel és helyi, licencelt betűkészletek.
 - `tests/`: állapot-, tananyag- és böngészőtesztek.
 - `playwright.config.cjs`, `package.json`, `package-lock.json`: reprodukálható fejlesztői tesztkörnyezet.
@@ -85,6 +101,8 @@ A kék elsődleges gomb sötétített változata a fehér szöveg olvashatóság
 A történet és a tanítás alapja a fejlesztési feladatban megadott magyar szöveg. Az igehelyekhez adott magyarázatok összefoglalások, nem szó szerinti bibliai idézetek. A külön idézett parancsolat („Ne lopj!” – 2Mózes 20,15) és a közös tanítás kiemelése („de mindent vizsgáljatok meg: a jót tartsátok meg” – 1Thesszalonika 5,21, részlet) a RÚF 2014 szövegét követi. Az 1Thesszalonika-idézet a felhasználó által megadott részlet; [forrása a Bible.com-on](https://www.bible.com/hu/bible/920/1TH.5.21.R%C3%9AF).
 
 ## Későbbi fejlesztés
+
+Az első nyitójelenethez készült egy [illusztrációs stíluspróba](design/illustrations/README.md), képgenerálással. Ez külön megtekinthető minta; még nem része a játék képernyőinek. A `v0.1.1` kiadás verziójelzést vezet be, az illusztrációk beépítése későbbi vizuális bővítés lesz.
 
 - A további öt történet tartalmi kidolgozása és ellenőrzése.
 - A történetválasztás és a hat történetet összekapcsoló döntési térkép.

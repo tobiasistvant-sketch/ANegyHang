@@ -1,13 +1,18 @@
 const { test, expect } = require('@playwright/test');
 const content = require('../js/content.js');
 const KEY = require('../js/state.js').STORAGE_KEY;
+const versionLabel = 'v' + require('../package.json').version;
 const active = page => page.locator('#main-content');
 const next = page => page.locator('[data-action="next"]');
 const value = page => page.evaluate(key => JSON.parse(sessionStorage.getItem(key)), KEY);
 async function phase(page, name) { await expect(active(page)).toHaveAttribute('data-step', name); }
 async function initial(page, letter) {
   await page.goto('/');
+  await expect(page.locator('[data-app-version]')).toHaveText([versionLabel, versionLabel]);
+  await expect(page.locator('.hero [data-app-version]')).toBeVisible();
+  await expect(page.locator('.app-footer [data-app-version]')).toBeVisible();
   await page.getByRole('button', { name: 'Kezdjük a történetet' }).click();
+  await expect(page.locator('.app-footer [data-app-version]')).toHaveText(versionLabel);
   await phase(page, 'situation');
   await next(page).click();
   await phase(page, 'initial');
@@ -119,6 +124,7 @@ test('A változatlan döntés megőrzése, újrakezdés és megszakítás', asyn
   await page.locator('.restart-button').click();
   await page.getByRole('button', { name: 'Újrakezdem', exact: true }).click();
   await phase(page, 'start');
+  await expect(page.locator('[data-app-version]')).toHaveText([versionLabel, versionLabel]);
   const state = await value(page);
   expect(state.initialChoice).toBeNull(); expect(state.finalChoice).toBeNull(); expect(state.reflection).toBeNull(); expect(state.takeaway).toBe('');
   expect(await page.evaluate(() => sessionStorage.getItem('other_project_marker'))).toBe('preserve');
