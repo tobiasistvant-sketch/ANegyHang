@@ -3,7 +3,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const content = require('../js/content.js');
 
-test('Egyetlen teljes történet, négy eredeti lehetőség és négy befejezés', () => {
+test('Egyetlen teljes történet, négy lehetőség és négy befejezés', () => {
   assert.equal(content.stories.length, 1);
   const story = content.stories[0];
   assert.equal(story.id, 'wallet');
@@ -12,6 +12,7 @@ test('Egyetlen teljes történet, négy eredeti lehetőség és négy befejezés
   assert.deepEqual(Object.keys(story.endings), ['A', 'B', 'C', 'D']);
   assert.ok(story.intro.join(' ').includes('500 lej, egy személyi igazolvány és két bankkártya'));
   assert.ok(story.choices.every(choice => typeof choice.text === 'string' && choice.text.length > 5));
+  assert.equal(story.choices.find(choice => choice.id === 'D').text, 'Visszateszem oda, ahol találtam, és továbbmegyek.');
   for (const ending of Object.values(story.endings)) {
     assert.ok(ending.paragraphs.length >= 2);
     for (const field of ['teaching', 'question']) assert.ok(ending[field].length > 20);
@@ -36,6 +37,8 @@ test('Pontos igehelyek, jóvátétel, és az otthagyás különbsége az eltulaj
   const endings = content.stories[0].endings;
   assert.equal(endings.A.scripture.reference, 'Máté 7,12');
   assert.equal(endings.B.scripture.reference, '2Mózes 20,15');
+  assert.equal(endings.B.scripture.label, '„Ne lopj!”');
+  assert.equal(endings.B.scripture.translation, 'RÚF 2014');
   assert.equal(endings.C.scripture.reference, '2Mózes 20,15');
   assert.equal(endings.D.scripture.reference, 'Lukács 10,25–37');
   assert.equal(endings.B.additionalScriptures[0].reference, 'Lukács 19,1–10');
@@ -51,6 +54,7 @@ test('A közös tanítás a tévedhetőséget, a Szentírást és a változás l
   assert.equal(teaching.scripture.reference, 'Róma 2,15');
   assert.match(teaching.scripture.explanation, /nem azonosítjuk automatikusan Isten közvetlen, tévedhetetlen hangjával/);
   for (const phrase of ['változásra', 'bocsánatkérésre', 'jóvátételre']) assert.ok(teaching.closing.includes(phrase));
-  assert.equal(teaching.highlight, 'Nem minden jóleső döntés helyes, és nem minden helyes döntés könnyű.');
+  assert.equal(teaching.highlight, 'de mindent vizsgáljatok meg: a jót tartsátok meg');
+  assert.equal(teaching.highlightReference, '1Thesszalonika 5,21 – RÚF 2014, részlet');
   assert.ok(!Object.keys(content).some(key => /score|points|ranking/i.test(key)));
 });

@@ -12,18 +12,23 @@ async function initial(page, letter) {
   await next(page).click();
   await phase(page, 'initial');
   await expect(next(page)).toBeDisabled();
+  await expect(next(page)).toHaveText('Megnézem a négy nézőpontot');
+  await expect(page.locator('label[for="initial-D"]')).toContainText('Visszateszem oda, ahol találtam, és továbbmegyek.');
   await page.locator('#initial-' + letter).check();
   await next(page).click();
 }
 async function voices(page) {
   for (const [i, voice] of content.voices.entries()) {
     await phase(page, 'voices');
+    await expect(page.locator('#screen-title')).toHaveText('Négy nézőpont – mit érdemes mérlegelned?');
+    await expect(page.locator('.screen-heading .lead')).toHaveText('Olvasd végig a négy szempontot, majd gondold át újra a döntésedet.');
     await expect(page.locator('.voice-title')).toHaveText(voice.name);
     await expect(page.locator('.voice-speech')).toContainText(voice.speech);
     expect((await value(page)).voiceIndex).toBe(i);
     await next(page).click();
   }
   await phase(page, 'final');
+  await expect(page.locator('label[for="final-D"]')).toContainText('Visszateszem oda, ahol találtam, és továbbmegyek.');
 }
 async function ending(page, letter, influence = 'mixed') {
   await expect(next(page)).toBeDisabled();
@@ -35,6 +40,11 @@ async function ending(page, letter, influence = 'mixed') {
   await next(page).click();
   await phase(page, 'continuation');
   await expect(page.locator('#screen-title')).toHaveText(content.stories[0].endings[letter].title);
+  if (letter === 'B') {
+    await expect(active(page)).toContainText('ELVESZETT PÉNZTÁRCA');
+    await expect(active(page)).toContainText('A pénzt édesanyám gyógyszereire tettem félre.');
+    await expect(active(page)).toContainText('Eszedbe jut az új fejhallgatód. A pénzt már elköltötted.');
+  }
   await next(page).click();
   await phase(page, 'biblical');
 }
@@ -43,6 +53,8 @@ async function reflection(page) {
   await phase(page, 'teaching');
   await expect(active(page)).toContainText('A lelkiismeret azonban nem tévedhetetlen.');
   await expect(active(page)).toContainText('Róma 2,15');
+  await expect(page.locator('.highlight-quote')).toHaveText('„de mindent vizsgáljatok meg: a jót tartsátok meg”');
+  await expect(page.locator('.teaching-panel .scripture-reference')).toHaveText('1Thesszalonika 5,21 – RÚF 2014, részlet');
   await next(page).click();
   await phase(page, 'reflection');
   await expect(next(page)).toBeDisabled();
@@ -60,7 +72,14 @@ for (const [index, letter] of ['A', 'B', 'C', 'D'].entries()) {
     await ending(page, letter, influence);
     await expect(active(page)).toContainText(content.stories[0].endings[letter].teaching);
     await expect(active(page)).toContainText(content.stories[0].endings[letter].question);
-    if (letter === 'B') await expect(active(page)).toContainText('Lukács 19,1–10');
+    if (letter === 'B') {
+      await expect(active(page)).toContainText('Lukács 19,1–10');
+      await expect(page.locator('.scripture-reference').first()).toHaveText('2Mózes 20,15 – RÚF 2014');
+      await expect(page.locator('.scripture-note h2').first()).toHaveText('„Ne lopj!”');
+    }
+    for (const note of await page.locator('.scripture-note').all()) {
+      await expect(note).toContainText('Magyarázat:');
+    }
     if (letter === 'D') await expect(active(page)).toContainText('nem azonosítjuk a pénz eltulajdonításával');
     await reflection(page);
     const answer = '</textarea><img src=x onerror="window.testInjection=1"> Árvíztűrő tükörfúrógép.\nEzt viszem magammal.';
@@ -77,9 +96,14 @@ for (const [index, letter] of ['A', 'B', 'C', 'D'].entries()) {
     const state = await value(page);
     expect(state.initialChoice).toBe(first); expect(state.finalChoice).toBe(letter); expect(state.influence).toBe(influence);
     await page.reload(); await phase(page, 'summary');
-    await page.getByRole('button', { name: 'Reflexió átnézése' }).click();
-    await expect(page.locator('#takeaway')).toHaveValue(answer);
-    await expect(page.locator('#reflection-uncertain')).toBeChecked();
+    await expect(page.locator('#takeaway-summary')).toHaveText(answer);
+    await expect(page.locator('.reflection-answer')).toContainText('Nem tudom biztosan. Elgondolkodtatott.');
+    await expect(page.locator('.summary-note')).toHaveText('Az első történet végére értél.');
+    await expect(active(page).getByRole('button')).toHaveCount(1);
+    await expect(active(page).getByRole('button', { name: 'Újrajátszom a történetet' })).toBeVisible();
+    await expect(active(page).locator('[data-action="edit-reflection"], [download]')).toHaveCount(0);
+    await expect(page.locator('.decision-box').first()).toContainText(content.stories[0].choices.find(c => c.id === first).text);
+    await expect(page.locator('.decision-box').last()).toContainText(content.stories[0].choices.find(c => c.id === letter).text);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
     expect(errors).toEqual([]); expect(outside).toEqual([]);
   });

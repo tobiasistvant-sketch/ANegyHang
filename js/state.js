@@ -112,8 +112,6 @@
       next.reflection = action.value;
     } else if (action.type === 'SET_TAKEAWAY' && current.step === 'reflection' && typeof action.value === 'string') {
       next.takeaway = action.value;
-    } else if (action.type === 'EDIT_REFLECTION' && current.step === 'summary') {
-      next.step = 'reflection';
     } else if (action.type === 'NEXT') {
       switch (current.step) {
         case 'situation': next.step = 'initial'; break;

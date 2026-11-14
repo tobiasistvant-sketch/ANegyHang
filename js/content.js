@@ -77,7 +77,7 @@
           { id: 'A', text: 'Megpróbálom visszajuttatni a teljes pénztárcát a tulajdonosának.' },
           { id: 'B', text: 'Megtartom a pénzt.' },
           { id: 'C', text: 'A pénzt megtartom, de az iratokat és a bankkártyákat visszajuttatom.' },
-          { id: 'D', text: 'Nem nyúlok hozzá többet. Otthagyom ott, ahol találtam.' }
+          { id: 'D', text: 'Visszateszem oda, ahol találtam, és továbbmegyek.' }
         ],
         endings: {
           A: {
@@ -99,12 +99,17 @@
             title: 'A pénz megtartása',
             paragraphs: [
               'Kiveszed az 500 lejt, a pénztárcát eldobod, és megveszed a régóta vágyott fejhallgatót.',
-              'Napokkal később hirdetést látsz egy elveszett pénztárcáról. A leírás alapján felismered, hogy azt találtad meg. A tulajdonosnak nagy szüksége lenne a pénzre.'
+              'Néhány nappal később egy hirdetésre leszel figyelmes a buszmegállóban.',
+              'ELVESZETT PÉNZTÁRCA',
+              '»Egy barna pénztárcát keresek, benne az irataimmal és 500 lejjel. A pénzt édesanyám gyógyszereire tettem félre. Holnap kellett volna kiváltanom őket. Kérem, aki megtalálta, jelentkezzen!«',
+              'A hirdetés alján ugyanaz a név szerepel, amelyet a személyi igazolványon láttál.',
+              'Eszedbe jut az új fejhallgatód. A pénzt már elköltötted.'
             ],
             teaching: 'Attól, hogy senki sem látott, a pénz még nem lett a tiéd. A lelkiismeret nem azonos a lebukástól való félelemmel.',
             scripture: {
               reference: '2Mózes 20,15',
               label: '„Ne lopj!”',
+              translation: 'RÚF 2014',
               explanation: 'A parancsolat a másik ember tulajdonának tiszteletére hív. A titokban megtartott pénz sem válik attól a tiéddé, hogy senki sem kér számon.'
             },
             additionalScriptures: [
@@ -162,7 +167,8 @@
         label: 'A lelkiismeret tanúskodása',
         explanation: 'Róma 2,15 a lelkiismeret tanúskodásához kapcsolódó igehely. A lelkiismeretet nem azonosítjuk automatikusan Isten közvetlen, tévedhetetlen hangjával.'
       },
-      highlight: 'Nem minden jóleső döntés helyes, és nem minden helyes döntés könnyű.',
+      highlight: 'de mindent vizsgáljatok meg: a jót tartsátok meg',
+      highlightReference: '1Thesszalonika 5,21 – RÚF 2014, részlet',
       closing: 'A keresztyén válasz nem pusztán a bűntudat. Isten kegyelmében bízva lehetőség nyílik a változásra, a bocsánatkérésre és a jóvátételre is.'
     },
     reflectionQuestion: 'Most, hogy a következményt és a bibliai tanítást is megismerted, mit gondolsz a döntésedről?',

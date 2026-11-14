@@ -37,7 +37,7 @@ A GitHub a sikeres publikálás után megjeleníti az oldal címét. A projekt g
 - Választáshoz kapcsolódó bibliai tanítás és kérdés. A pénz megtartásánál Zákeus története és a jóvátétel lehetősége is megjelenik.
 - Közös tanítás a lelkiismeretről: tévedhetőség, vizsgálat a Szentírás fényében, változás, bocsánatkérés és jóvátétel.
 - Záró reflexió, opcionális saját gondolat és személyes összesítő kártya.
-- Reflexió utólagos átnézése és megerősítéshez kötött újrakezdés.
+- Megerősítéshez kötött újrakezdés.
 
 Nincs erkölcsi pontszám, rangsor vagy a döntés megváltoztatásáért járó jutalom. A négy hang azonos súlyú vizuális karaktert kap. A pénztárca otthagyását nem azonosítja az alkalmazás a pénz eltulajdonításával. A lelkiismeretet nem tekinti automatikusan Isten közvetlen, tévedhetetlen hangjának.
 
@@ -82,7 +82,7 @@ Elsődleges vizuális referencia: **Digitális lelkiismeret**. A sötétkék fej
 
 A kék elsődleges gomb sötétített változata a fehér szöveg olvashatóságát szolgálja. A helyi betűkészletek forrása, változata, ellenőrzőösszege és licence az `assets/fonts/` mappában található.
 
-A történet és a tanítás alapja a fejlesztési feladatban megadott magyar szöveg. Az igehelyekhez adott magyarázatok összefoglalások, nem egy meghatározott bibliafordítás teljes, szó szerinti idézetei. Az egyetlen rövid, külön idézett parancsolat („Ne lopj!”) a megadott feladat része.
+A történet és a tanítás alapja a fejlesztési feladatban megadott magyar szöveg. Az igehelyekhez adott magyarázatok összefoglalások, nem szó szerinti bibliai idézetek. A külön idézett parancsolat („Ne lopj!” – 2Mózes 20,15) és a közös tanítás kiemelése („de mindent vizsgáljatok meg: a jót tartsátok meg” – 1Thesszalonika 5,21, részlet) a RÚF 2014 szövegét követi. Az 1Thesszalonika-idézet a felhasználó által megadott részlet; [forrása a Bible.com-on](https://www.bible.com/hu/bible/920/1TH.5.21.R%C3%9AF).
 
 ## Későbbi fejlesztés
 

@@ -157,20 +157,13 @@ assert.equal(State.save(null, validSummary), false);
 console.log('✓ Tiltott és betelt helyi tároló mellett is használható, memóriában folytatható állapot.');
 
 const storage = memoryStorage(JSON.stringify(validSummary));
-const edited = action(validSummary, 'EDIT_REFLECTION');
-assert.equal(edited.step, 'reflection');
-assert.equal(edited.takeaway, validSummary.takeaway);
-const revised = next(action(action(edited, 'SELECT_REFLECTION', 'different'), 'SET_TAKEAWAY', 'Másik gondolat.'));
-assert.equal(revised.step, 'summary');
-assert.equal(revised.initialChoice, validSummary.initialChoice);
-assert.equal(revised.finalChoice, validSummary.finalChoice);
 const reset = State.reset(storage);
 assert.deepEqual(reset, State.createState());
 assert.deepEqual(State.load(storage, content).state, State.createState());
 assert.deepEqual(action(validSummary, 'RESTART'), State.createState());
 assert.deepEqual(action(validSummary, 'UNKNOWN'), validSummary);
 assert.deepEqual(State.transition(validSummary, null, content), validSummary);
-console.log('✓ Reflexió javítása és teljes újrakezdés a döntések visszamenőleges átírása nélkül.');
+console.log('✓ Teljes újrakezdés a döntések visszamenőleges átírása nélkül.');
 
 const expanded = { ...content, stories: [...content.stories, { ...content.stories[0], id: 'future-story' }] };
 const future = State.createState('future-story');
