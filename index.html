@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#052738">
+  <meta name="description" content="A Négy hang: interaktív keresztyén döntéstörténet XI. osztályos diákoknak a lelkiismeretről, szabadságról és felelősségről.">
+  <title>A NÉGY HANG – Ki irányítja a döntéseidet?</title>
+  <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/content.js" defer></script>
+  <script src="js/state.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Ugrás a történethez</a>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="header-inner">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><path d="M20 4v32M4 20h32" stroke="currentColor" stroke-width="1.5" opacity=".45"/><circle cx="12" cy="12" r="5" fill="currentColor"/><circle cx="28" cy="12" r="5" fill="currentColor" opacity=".7"/><circle cx="12" cy="28" r="5" fill="currentColor" opacity=".7"/><circle cx="28" cy="28" r="5" fill="currentColor"/></svg></span>
+          <div><p class="brand-name">A NÉGY HANG</p><p class="brand-subtitle">Ki irányítja a döntéseidet?</p></div>
+        </div>
+        <div class="header-actions"><span class="subject-badge">Református vallás · XI. osztály</span><button type="button" class="restart-button" data-action="restart" hidden>Újrakezdés</button></div>
+      </div>
+      <nav class="chapter-nav" aria-label="A történet szakaszai"><ol id="chapters"></ol></nav>
+      <div class="progress-track" role="progressbar" aria-label="Haladás a történetben" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" id="progress"><div class="progress-fill" id="progress-fill"></div></div>
+    </header>
+    <p id="storage-note" class="storage-notice" role="status" hidden></p>
+    <main id="main-content" class="app-main" tabindex="-1"><p>A történet betöltése…</p></main>
+    <noscript><p class="storage-notice">A játék használatához engedélyezd a JavaScript futtatását a böngésződben.</p></noscript>
+    <footer class="app-footer"><span>Református vallás · Keresztyén etika</span><span>Nincs pontozás. A válaszaid helyben maradnak.</span></footer>
+  </div>
+  <dialog id="reset-dialog" class="reset-dialog" aria-labelledby="reset-title" aria-describedby="reset-description">
+    <h2 id="reset-title">Újrakezded a történetet?</h2>
+    <p id="reset-description">A mostani döntéseid és reflexiód törlődnek ebből a munkamenetből.</p>
+    <form method="dialog" class="actions"><button value="cancel" class="btn btn-secondary" autofocus>Még folytatom</button><button value="restart" class="btn btn-primary">Újrakezdem</button></form>
+  </dialog>
+</body>
+</html>
