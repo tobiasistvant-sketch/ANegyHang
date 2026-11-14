@@ -6,25 +6,44 @@ const active = page => page.locator('#main-content');
 const next = page => page.locator('[data-action="next"]');
 const value = page => page.evaluate(key => JSON.parse(sessionStorage.getItem(key)), KEY);
 async function phase(page, name) { await expect(active(page)).toHaveAttribute('data-step', name); }
-async function initial(page, letter) {
+const endingImages = { A: 'wallet-ending-return-full', B: 'wallet-ending-keep-money', C: 'wallet-ending-return-documents', D: 'wallet-ending-walk-away' };
+async function scene(page, id, imagesAvailable = true) {
+  const frame = active(page).locator(`[data-illustration="${id}"]`);
+  await expect(active(page).locator('[data-illustration]')).toHaveCount(1);
+  const image = frame.locator('img');
+  await expect(image).toHaveAttribute('src', `assets/illustrations/${id}.png`);
+  await expect(image).toHaveAttribute('alt', /\S+/);
+  await image.evaluate(img => { img.loading = 'eager'; });
+  if (imagesAvailable) {
+    await expect(frame).toBeVisible();
+    await expect.poll(() => image.evaluate(img => [img.naturalWidth, img.naturalHeight])).toEqual([1280, 720]);
+  } else {
+    await expect(frame).toBeHidden();
+  }
+}
+async function initial(page, letter, imagesAvailable = true) {
   await page.goto('/');
+  await scene(page, 'hero-four-paths', imagesAvailable);
   await expect(page.locator('[data-app-version]')).toHaveText([versionLabel, versionLabel]);
   await expect(page.locator('.hero [data-app-version]')).toBeVisible();
   await expect(page.locator('.app-footer [data-app-version]')).toBeVisible();
   await page.getByRole('button', { name: 'Kezdjük a történetet' }).click();
   await expect(page.locator('.app-footer [data-app-version]')).toHaveText(versionLabel);
   await phase(page, 'situation');
+  await scene(page, 'wallet-scene-opening', imagesAvailable);
   await next(page).click();
   await phase(page, 'initial');
+  await scene(page, 'wallet-scene-opening', imagesAvailable);
   await expect(next(page)).toBeDisabled();
   await expect(next(page)).toHaveText('Megnézem a négy nézőpontot');
   await expect(page.locator('label[for="initial-D"]')).toContainText('Visszateszem oda, ahol találtam, és továbbmegyek.');
   await page.locator('#initial-' + letter).check();
   await next(page).click();
 }
-async function voices(page) {
+async function voices(page, imagesAvailable = true) {
   for (const [i, voice] of content.voices.entries()) {
     await phase(page, 'voices');
+    await scene(page, 'wallet-scene-voices', imagesAvailable);
     await expect(page.locator('#screen-title')).toHaveText('Négy nézőpont – mit érdemes mérlegelned?');
     await expect(page.locator('.screen-heading .lead')).toHaveText('Olvasd végig a négy szempontot, majd gondold át újra a döntésedet.');
     await expect(page.locator('.voice-title')).toHaveText(voice.name);
@@ -33,9 +52,10 @@ async function voices(page) {
     await next(page).click();
   }
   await phase(page, 'final');
+  await expect(active(page).locator('[data-illustration]')).toHaveCount(0);
   await expect(page.locator('label[for="final-D"]')).toContainText('Visszateszem oda, ahol találtam, és továbbmegyek.');
 }
-async function ending(page, letter, influence = 'mixed') {
+async function ending(page, letter, influence = 'mixed', imagesAvailable = true) {
   await expect(next(page)).toBeDisabled();
   await page.locator('#final-' + letter).check();
   await next(page).click();
@@ -44,6 +64,7 @@ async function ending(page, letter, influence = 'mixed') {
   await page.locator('#influence-' + influence).check();
   await next(page).click();
   await phase(page, 'continuation');
+  await scene(page, endingImages[letter], imagesAvailable);
   await expect(page.locator('#screen-title')).toHaveText(content.stories[0].endings[letter].title);
   if (letter === 'B') {
     await expect(active(page)).toContainText('ELVESZETT PÉNZTÁRCA');
@@ -52,16 +73,19 @@ async function ending(page, letter, influence = 'mixed') {
   }
   await next(page).click();
   await phase(page, 'biblical');
+  await expect(active(page).locator('[data-illustration]')).toHaveCount(0);
 }
 async function reflection(page) {
   await next(page).click();
   await phase(page, 'teaching');
+  await expect(active(page).locator('[data-illustration]')).toHaveCount(0);
   await expect(active(page)).toContainText('A lelkiismeret azonban nem tévedhetetlen.');
   await expect(active(page)).toContainText('Róma 2,15');
   await expect(page.locator('.highlight-quote')).toHaveText('„de mindent vizsgáljatok meg: a jót tartsátok meg”');
   await expect(page.locator('.teaching-panel .scripture-reference')).toHaveText('1Thesszalonika 5,21 – RÚF 2014, részlet');
   await next(page).click();
   await phase(page, 'reflection');
+  await expect(active(page).locator('[data-illustration]')).toHaveCount(0);
   await expect(next(page)).toBeDisabled();
 }
 
@@ -175,3 +199,37 @@ test('Billentyűzet, fókusz és natív megerősítő párbeszédablak', async (
   await page.keyboard.press('Escape'); await expect(page.locator('#reset-dialog')).not.toBeVisible();
   await phase(page, 'initial');
 });
+
+test('WebP-betöltési hiba esetén a helyi PNG is használható', async ({ page }) => {
+  await page.route('**/assets/illustrations/*.webp', route => route.abort());
+  await page.goto('/');
+  await scene(page, 'hero-four-paths');
+  await expect.poll(() => page.locator('[data-scene-image]').evaluate(img => img.currentSrc.endsWith('/hero-four-paths.png'))).toBe(true);
+  await page.getByRole('button', { name: 'Kezdjük a történetet' }).click();
+  await scene(page, 'wallet-scene-opening');
+  await expect.poll(() => page.locator('[data-scene-image]').evaluate(img => img.currentSrc.endsWith('/wallet-scene-opening.png'))).toBe(true);
+});
+
+for (const [index, letter] of ['A', 'B', 'C', 'D'].entries()) {
+  test('Képek nélkül is végigjátszható a ' + letter + ' befejezés és a reflexió', async ({ page }) => {
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.route('**/assets/illustrations/*', route => route.abort());
+    const first = ['B', 'A', 'D', 'C'][index];
+    await initial(page, first, false);
+    await voices(page, false);
+    await ending(page, letter, 'mixed', false);
+    await reflection(page);
+    await page.locator('#reflection-uncertain').check();
+    await page.locator('#takeaway').fill('Képek nélkül is megmarad a saját gondolatom.');
+    await next(page).click();
+    await phase(page, 'summary');
+    await expect(page.locator('#takeaway-summary')).toHaveText('Képek nélkül is megmarad a saját gondolatom.');
+    const state = await value(page);
+    expect(state.initialChoice).toBe(first);
+    expect(state.finalChoice).toBe(letter);
+    expect(state.reflection).toBe('uncertain');
+    await expect(page.locator('.app-footer [data-app-version]')).toHaveText(versionLabel);
+    expect(errors).toEqual([]);
+  });
+}

@@ -33,7 +33,7 @@ Az alkalmazás verziójának egyetlen központi forrása a `package.json` **`ver
 A következő kiadáshoz például:
 
 ```sh
-npm version 0.1.2 --no-git-tag-version
+npm version 0.2.1 --no-git-tag-version
 npm test
 ```
 
@@ -71,6 +71,7 @@ A közös eszközt a következő tanuló előtt az **Újrakezdés** művelettel 
 - `js/content.js`: a történet, hangok, befejezések, bibliai tanítások és reflexiós kérdések.
 - `js/state.js`: tiszta állapotgép, érvényességi feltételek, mentés és helyreállítás.
 - `js/app.js`: a felület és eseményei; a szöveges tananyag adatból származik.
+- `js/illustrations.js`: a hét helyi jelenetkép elérési útja, mérete és magyar alternatív szövege.
 - `js/version.js`: a központi verzióból generált statikus metaadat; `scripts/sync-version.cjs`: generálás és ellenőrzés.
 - `assets/`: saját SVG-jel és helyi, licencelt betűkészletek.
 - `tests/`: állapot-, tananyag- és böngészőtesztek.
@@ -100,9 +101,15 @@ A kék elsődleges gomb sötétített változata a fehér szöveg olvashatóság
 
 A történet és a tanítás alapja a fejlesztési feladatban megadott magyar szöveg. Az igehelyekhez adott magyarázatok összefoglalások, nem szó szerinti bibliai idézetek. A külön idézett parancsolat („Ne lopj!” – 2Mózes 20,15) és a közös tanítás kiemelése („de mindent vizsgáljatok meg: a jót tartsátok meg” – 1Thesszalonika 5,21, részlet) a RÚF 2014 szövegét követi. Az 1Thesszalonika-idézet a felhasználó által megadott részlet; [forrása a Bible.com-on](https://www.bible.com/hu/bible/920/1TH.5.21.R%C3%9AF).
 
-## Későbbi fejlesztés
+## Illusztrációk – v0.2.0
 
-Az első nyitójelenethez készült egy [illusztrációs stíluspróba](design/illustrations/README.md), képgenerálással. Ez külön megtekinthető minta; még nem része a játék képernyőinek. A `v0.1.1` kiadás verziójelzést vezet be, az illusztrációk beépítése későbbi vizuális bővítés lesz.
+A `v0.2.0` változatban elkészült az általános kezdőoldali illusztráció és az első történet grafikus jelenetcsomagja: összesen hét, az alkalmazásba beépített jelenet. A kezdőoldal négyfelé ágazó utat mutat; a pénztárcás történet a jóváhagyott nyitóképet használja. A négy hang közös, visszafogott háttérképet kapott, a négy befejezés pedig saját illusztrációt. A bibliai és személyes reflexiók szövegközpontúak maradtak. A B befejezés hirdetése továbbra is olvasható HTML-szöveg, nem a kép része.
+
+A helyi `assets/illustrations/` mappában minden jelenethez 1280 × 720 képpontos (16:9) PNG és optimalizált WebP tartozik. A böngésző WebP-t használ, hiba esetén PNG-re vált. Ha egyik kép sem töltődik be, a képkeret eltűnik, a történet és a vezérlők továbbra is működnek. Nincs külső képszolgáltatás.
+
+Az eredeti PNG-ket, a jelenetek listáját és a generálási leírásokat a [grafikai dokumentáció](design/illustrations/README.md) őrzi. A webes változatok újra-előállítása ImageMagick 7-tel: `bash scripts/prepare-illustrations.sh`. Ez csak fejlesztői képméret- és formátumoptimalizálás; a játék futtatásához nem szükséges. A jóváhagyott eredeti képet nem generáltuk újra.
+
+## Későbbi fejlesztés
 
 - A további öt történet tartalmi kidolgozása és ellenőrzése.
 - A történetválasztás és a hat történetet összekapcsoló döntési térkép.

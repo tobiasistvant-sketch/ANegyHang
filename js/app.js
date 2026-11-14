@@ -3,6 +3,7 @@
   'use strict';
   const content = window.NegyHangContent;
   const engine = window.NegyHangState;
+  const illustrations = window.NegyHangIllustrations || {};
   const version = window.NegyHangVersion;
   const versionLabel = version && /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.test(version.version) ? `v${version.version}` : '';
   const main = document.getElementById('main-content');
@@ -33,12 +34,18 @@
     mixed: '<circle cx="6" cy="7" r="2"/><circle cx="18" cy="7" r="2"/><circle cx="6" cy="17" r="2"/><circle cx="18" cy="17" r="2"/><path d="m8 8 8 8M8 16l8-8"/>'
   };
   const icon = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.notes}</svg>`;
-  const wallet = () => `<svg class="wallet-illustration" viewBox="0 0 360 230" fill="none" aria-hidden="true"><circle cx="181" cy="112" r="103" fill="#EAF3F4"/><path d="M42 186h275M63 152h226M79 152v34m196-34v34" stroke="#BCD0D4" stroke-width="7" stroke-linecap="round"/><rect x="99" y="72" width="163" height="111" rx="17" fill="#956B50"/><path d="M113 72V62a8 8 0 0 1 8-8h112a12 12 0 0 1 12 12v6" fill="#77513D"/><path d="m129 80-6-39 93-12 8 51" fill="#FAF4E7" stroke="#D4BD94" stroke-width="2"/><path d="m143 57 48-6" stroke="#C3AB7E" stroke-width="3" stroke-linecap="round"/><text x="150" y="71" font-family="sans-serif" font-size="16" font-weight="700" fill="#6A604D">500 LEJ</text><rect x="130" y="79" width="110" height="62" rx="7" fill="#B5D1D6" transform="rotate(7 130 79)"/><path d="m146 96 60 8m-62 3 40 6" stroke="#6B9CA4" stroke-width="4" stroke-linecap="round"/><rect x="102" y="101" width="160" height="82" rx="15" fill="#A77A5E"/><rect x="224" y="119" width="50" height="38" rx="10" fill="#7F5941"/><circle cx="247" cy="138" r="4" fill="#E6C9A3"/><path d="M117 116v48m1 3h99" stroke="#D1AB8B" stroke-width="2" stroke-dasharray="4 5"/></svg>`;
   const heading = (eyebrow, title, lead = '') => `<header class="screen-heading"><p class="eyebrow">${escape(eyebrow)}</p><h1 id="screen-title" tabindex="-1">${escape(title)}</h1>${lead ? `<p class="lead">${escape(lead)}</p>` : ''}</header>`;
   const button = (label, action = 'next', disabled = false, secondary = false) => `<button type="button" class="btn ${secondary ? 'btn-secondary' : 'btn-primary'}" data-action="${action}" ${disabled ? 'disabled' : ''}>${escape(label)}${secondary ? '' : icon('arrow')}</button>`;
   const paragraphs = items => items.map(item => `<p>${escape(item)}</p>`).join('');
   const scripture = item => `<section class="scripture-note"><p class="scripture-reference">${escape(item.reference)}${item.translation ? ` – ${escape(item.translation)}` : ''}</p><h2>${escape(item.label)}</h2><p><strong>Magyarázat:</strong> ${escape(item.explanation)}</p></section>`;
   const voiceStyle = voice => `--voice-color:${voice.color};--voice-tint:${tints[voice.id]}`;
+  const endingScenes = { A: 'wallet-ending-return-full', B: 'wallet-ending-keep-money', C: 'wallet-ending-return-documents', D: 'wallet-ending-walk-away' };
+  function scene(id, className = '', eager = false) {
+    const image = illustrations[id];
+    if (!image) return '';
+    return `<figure class="scene-figure ${className}" data-illustration="${id}"><picture><source srcset="${escape(image.webp)}" type="image/webp"><img src="${escape(image.png)}" alt="${escape(image.alt)}" width="${image.width}" height="${image.height}" loading="${eager ? 'eager' : 'lazy'}" decoding="async" ${eager ? 'fetchpriority="high"' : ''} data-scene-image></picture></figure>`;
+  }
+
 
   function canAdvance() {
     return state.step === 'initial' ? !!state.initialChoice : state.step === 'final' ? !!state.finalChoice : state.step === 'influence' ? !!state.influence : state.step === 'reflection' ? !!state.reflection : true;
@@ -50,18 +57,19 @@
     return `<div class="decision-pair"><section class="decision-box"><h2>Első megérzésed</h2><p><strong>${state.initialChoice}</strong> · ${escape(choice(state.initialChoice).text)}</p></section><section class="decision-box"><h2>Átgondolt döntésed</h2><p><strong>${state.finalChoice}</strong> · ${escape(choice(state.finalChoice).text)}</p></section></div><dl class="summary-list"><div><dt>Változtattál?</dt><dd>${state.initialChoice === state.finalChoice ? 'Nem.' : 'Igen.'}</dd></div><div><dt>Ami leginkább hatott rád</dt><dd>${escape(influence().text)}</dd></div></dl>`;
   }
   function renderStart() {
-    return `<section class="hero"><div class="hero-copy"><p class="eyebrow">Interaktív döntéstörténet · XI. osztály</p><h1 class="hero-title" id="screen-title" tabindex="-1">A NÉGY HANG</h1><h2 class="hero-subtitle">${escape(content.subtitle)}</h2><p class="lead">Először az első megérzésedre hallgatsz. Aztán négy nézőpontot ismersz meg. A végső döntést te hozod meg.</p><p class="story-label">A megtalált pénztárca</p><div class="actions">${button('Kezdjük a történetet', 'start')}</div><p class="session-note">A haladásod ezen a böngészőlapon újratöltés után is megmarad. A lap bezárásakor a munkamenet véget ér.</p><p class="app-version" data-app-version hidden></p></div><div class="hero-art">${wallet()}<div class="voice-roster">${content.voices.map(voice => `<div class="voice-mini" style="${voiceStyle(voice)}"><span class="voice-mini-icon">${icon(voice.icon)}</span><span>${escape(voice.name)}</span></div>`).join('')}</div></div></section><div class="feature-grid"><section class="feature-card">${icon('exchange')}<h2>Két döntés</h2><p>Az első megérzésed és az átgondolt választásod külön is megmarad.</p></section><section class="feature-card">${icon('mixed')}<h2>Négy nézőpont</h2><p>Figyeld meg, mi befolyásol, amikor választanod kell!</p></section><section class="feature-card">${icon('notes')}<h2>Saját felismerés</h2><p>Nincs pontozás. A történet a személyes mérlegelésedet segíti.</p></section></div>`;
+    return `<section class="hero"><div class="hero-copy"><p class="eyebrow">Interaktív döntéstörténet · XI. osztály</p><h1 class="hero-title" id="screen-title" tabindex="-1">A NÉGY HANG</h1><h2 class="hero-subtitle">${escape(content.subtitle)}</h2><p class="lead">Először az első megérzésedre hallgatsz. Aztán négy nézőpontot ismersz meg. A végső döntést te hozod meg.</p><p class="story-label">A megtalált pénztárca</p><div class="actions">${button('Kezdjük a történetet', 'start')}</div><p class="session-note">A haladásod ezen a böngészőlapon újratöltés után is megmarad. A lap bezárásakor a munkamenet véget ér.</p><p class="app-version" data-app-version hidden></p></div><div class="hero-art">${scene('hero-four-paths', 'hero-scene', true)}<div class="voice-roster">${content.voices.map(voice => `<div class="voice-mini" style="${voiceStyle(voice)}"><span class="voice-mini-icon">${icon(voice.icon)}</span><span>${escape(voice.name)}</span></div>`).join('')}</div></div></section><div class="feature-grid"><section class="feature-card">${icon('exchange')}<h2>Két döntés</h2><p>Az első megérzésed és az átgondolt választásod külön is megmarad.</p></section><section class="feature-card">${icon('mixed')}<h2>Négy nézőpont</h2><p>Figyeld meg, mi befolyásol, amikor választanod kell!</p></section><section class="feature-card">${icon('notes')}<h2>Saját felismerés</h2><p>Nincs pontozás. A történet a személyes mérlegelésedet segíti.</p></section></div>`;
   }
   function renderSituation() {
-    return `${heading('A történet kezdete', story().title)}<div class="content-grid"><article class="story-card"><div class="story-text">${paragraphs(story().intro)}</div><p class="story-question">${escape(story().question)}</p><div class="actions">${button('Meghozom az első döntésem')}</div></article><aside class="context-card">${wallet()}<p class="eyebrow">Hazafelé · A buszmegálló</p><ul class="context-facts"><li><strong>500 lej</strong> a pénztárcában</li><li>Személyi igazolvány és két bankkártya</li><li>Néhány perc a busz érkezéséig</li></ul></aside></div>`;
+    return `${heading('A történet kezdete', story().title)}<div class="content-grid"><article class="story-card"><div class="story-text">${paragraphs(story().intro)}</div><p class="story-question">${escape(story().question)}</p><div class="actions">${button('Meghozom az első döntésem')}</div></article><aside class="context-card">${scene('wallet-scene-opening', 'context-scene')}<p class="eyebrow">Hazafelé · A buszmegálló</p><ul class="context-facts"><li><strong>500 lej</strong> a pénztárcában</li><li>Személyi igazolvány és két bankkártya</li><li>Néhány perc a busz érkezéséig</li></ul></aside></div>`;
   }
   function renderDecision(final) {
     const name = final ? 'final' : 'initial';
-    return `${heading(final ? 'A hangok után' : 'Az első megérzésed', final ? 'Az átgondolt döntésed' : 'Most mit választanál?', final ? 'Megtarthatod vagy megváltoztathatod az első választásodat.' : 'Válaszd ki, mit tennél ebben a helyzetben!')}${final ? `<aside class="previous-choice"><span>Az első döntésed</span><p><strong>${state.initialChoice}</strong> · ${escape(choice(state.initialChoice).text)}</p></aside>` : ''}<section class="panel"><fieldset class="choice-fieldset"><legend>${escape(story().question)}</legend>${choices(name, story().choices, final ? state.finalChoice : state.initialChoice)}</fieldset><p class="selection-hint">A továbblépéshez válassz egy lehetőséget.</p><div class="actions">${button(final ? 'Ez az átgondolt döntésem' : 'Megnézem a négy nézőpontot', 'next', !canAdvance())}</div></section>`;
+    const panel = `<section class="panel"><fieldset class="choice-fieldset"><legend>${escape(story().question)}</legend>${choices(name, story().choices, final ? state.finalChoice : state.initialChoice)}</fieldset><p class="selection-hint">A továbblépéshez válassz egy lehetőséget.</p><div class="actions">${button(final ? 'Ez az átgondolt döntésem' : 'Megnézem a négy nézőpontot', 'next', !canAdvance())}</div></section>`;
+    return `${heading(final ? 'A hangok után' : 'Az első megérzésed', final ? 'Az átgondolt döntésed' : 'Most mit választanál?', final ? 'Megtarthatod vagy megváltoztathatod az első választásodat.' : 'Válaszd ki, mit tennél ebben a helyzetben!')}${final ? `<aside class="previous-choice"><span>Az első döntésed</span><p><strong>${state.initialChoice}</strong> · ${escape(choice(state.initialChoice).text)}</p></aside>${panel}` : `<div class="decision-layout">${scene('wallet-scene-opening', 'decision-scene')}${panel}</div>`}`;
   }
   function renderVoice() {
     const voice = content.voices[state.voiceIndex];
-    return `${heading('Négy nézőpont', 'Négy nézőpont – mit érdemes mérlegelned?', 'Olvasd végig a négy szempontot, majd gondold át újra a döntésedet.')}<ol class="voice-steps" aria-label="A négy hang sorrendje">${content.voices.map((item, i) => `<li class="${i === state.voiceIndex ? 'active' : i < state.voiceIndex ? 'done' : ''}" ${i === state.voiceIndex ? 'aria-current="step"' : ''} style="${voiceStyle(item)}"><span class="voice-mini-icon">${icon(item.icon)}</span>${escape(item.label)}</li>`).join('')}</ol><section class="voice-stage" style="${voiceStyle(voice)}"><div class="voice-avatar">${icon(voice.icon)}</div><article class="voice-card"><p class="voice-kicker">${state.voiceIndex + 1} / 4 hang</p><h2 class="voice-title">${escape(voice.name)}</h2><p class="voice-description">${escape(voice.description)}</p><blockquote class="voice-speech">„${escape(voice.speech)}”</blockquote></article></section>${state.voiceIndex === content.voices.length - 1 ? `<p class="voice-closing">${escape(content.voicesClosing)}</p>` : ''}<div class="actions">${button(state.voiceIndex === content.voices.length - 1 ? 'Átgondolom a döntésemet' : 'Következő hang')}</div>`;
+    return `${heading('Négy nézőpont', 'Négy nézőpont – mit érdemes mérlegelned?', 'Olvasd végig a négy szempontot, majd gondold át újra a döntésedet.')}<ol class="voice-steps" aria-label="A négy hang sorrendje">${content.voices.map((item, i) => `<li class="${i === state.voiceIndex ? 'active' : i < state.voiceIndex ? 'done' : ''}" ${i === state.voiceIndex ? 'aria-current="step"' : ''} style="${voiceStyle(item)}"><span class="voice-mini-icon">${icon(item.icon)}</span>${escape(item.label)}</li>`).join('')}</ol><div class="voice-context">${scene('wallet-scene-voices', 'voice-backdrop')}<section class="voice-stage" style="${voiceStyle(voice)}"><div class="voice-avatar">${icon(voice.icon)}</div><article class="voice-card"><p class="voice-kicker">${state.voiceIndex + 1} / 4 hang</p><h2 class="voice-title">${escape(voice.name)}</h2><p class="voice-description">${escape(voice.description)}</p><blockquote class="voice-speech">„${escape(voice.speech)}”</blockquote></article></section></div>${state.voiceIndex === content.voices.length - 1 ? `<p class="voice-closing">${escape(content.voicesClosing)}</p>` : ''}<div class="actions">${button(state.voiceIndex === content.voices.length - 1 ? 'Átgondolom a döntésemet' : 'Következő hang')}</div>`;
   }
   function renderInfluence() {
     return `${heading('A döntésed mögött', content.influenceQuestion, 'Válaszd azt, ami legjobban leírja a saját mérlegelésedet!')}<section class="panel"><fieldset class="choice-fieldset"><legend class="sr-only">${escape(content.influenceQuestion)}</legend><div class="influence-list">${content.influences.map(item => {
@@ -71,7 +79,10 @@
   }
   function renderContinuation() {
     const ending = engine.getEnding(state, content);
-    return `${heading('A történet folytatása', ending.title)}<article class="story-card"><p class="outcome-tag">A második döntésed: ${state.finalChoice}</p><div class="story-text">${paragraphs(ending.paragraphs)}</div><div class="actions">${button('A bibliai nézőpont')}</div></article>`;
+    const prose = state.storyId === 'wallet' && state.finalChoice === 'B'
+      ? `${paragraphs(ending.paragraphs.slice(0, 2))}<aside class="notice-card" aria-label="A buszmegállóban olvasott hirdetés">${paragraphs(ending.paragraphs.slice(2, 4))}</aside>${paragraphs(ending.paragraphs.slice(4))}`
+      : paragraphs(ending.paragraphs);
+    return `${heading('A történet folytatása', ending.title)}<article class="story-card"><p class="outcome-tag">A második döntésed: ${state.finalChoice}</p>${scene(endingScenes[state.finalChoice], 'ending-scene')}<div class="story-text">${prose}</div><div class="actions">${button('A bibliai nézőpont')}</div></article>`;
   }
   function renderBiblical() {
     const ending = engine.getEnding(state, content);
@@ -141,6 +152,19 @@
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
   }
+  // A failed WebP retries its local PNG; a missing scene never blocks the story.
+  document.addEventListener('error', event => {
+    const image = event.target;
+    if (!(image instanceof HTMLImageElement) || !image.matches('[data-scene-image]')) return;
+    const picture = image.closest('picture');
+    const sources = picture ? picture.querySelectorAll('source') : [];
+    if (sources.length) {
+      sources.forEach(source => source.remove());
+      return;
+    }
+    const frame = image.closest('[data-illustration]');
+    if (frame) frame.hidden = true;
+  }, true);
   document.addEventListener('click', event => {
     const control = event.target.closest('[data-action]');
     if (!control) return;
