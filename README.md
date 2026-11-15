@@ -4,7 +4,7 @@ Magyar nyelvű, interaktív keresztyén döntéstörténet XI. osztályos, 16–
 
 Önálló repository: [tobiasistvant-sketch/ANegyHang](https://github.com/tobiasistvant-sketch/ANegyHang).
 
-A prototípus **egyetlen teljes történetet** tartalmaz: **A megtalált pénztárca**. A tervezett további öt helyzethez nem tartalmaz helykitöltőket.
+A `v0.4.0` **két teljes, választható történetet** tartalmaz: **A megtalált pénztárca** (`wallet`) és **Az igazságtalan tanár** (`teacher`). A történetválasztás a kezdőoldalon történik, saját kezdőképpel és bemutatással. A tervezett további négy helyzethez nincs helykitöltő.
 
 ## Indítás
 
@@ -41,19 +41,21 @@ Az npm `version` életciklus-parancsa automatikusan létrehozza a böngésző á
 
 A GitHub Pages a `main` ág gyökerében lévő, commitolt fájlokat publikálja. Az új verziójelzés a megfelelő commit sikeres Pages-közzététele után jelenik meg; pusztán egy helyi verziófrissítés még nem módosítja az élő oldalt. Commitazonosító szándékosan nem szerepel a felületen: a jelenlegi, ágból történő statikus közzététel mellett egy kézzel beírt hash nem igazolná megbízhatóan a ténylegesen kiszolgált kiadást. Ehhez később ellenőrzött kiadási metaadatot előállító publikálási folyamat szükséges.
 
-## A hét fő képernyő – v0.3.1
+## Két történet, hét fő képernyő – v0.4.0
 
-A jóváhagyott tartalmi alap a [lektorált Word-szövegkönyv](docs/ANegyHang_9_kepernyos_lektoralt_szovegkonyv.docx). A dokumentum változatlanul megmarad a `docs` mappában; a szerkesztői és fejlesztési megjegyzései megvalósítási utasítások, nem tanulói szövegek.
+A jóváhagyott tartalmi források a [pénztárcás történet lektorált szövegkönyve](docs/ANegyHang_9_kepernyos_lektoralt_szovegkonyv.docx) és [a tanáros történet jóváhagyott forgatókönyve](docs/ANegyHang_2_tortenet_jovahagyott_forgatokonyv.docx). Mindkét eredeti Word-fájl változatlanul megmarad a `docs` mappában. A szerkesztői és fejlesztési megjegyzések megvalósítási utasítások, nem tanulói szövegek.
 
-A `v0.3.1` jóváhagyott szerkezeti módosítása felülírja a szövegkönyv korábbi 6. és 9. képernyőjének használatát. A külön befolyásoló kérdés kimarad, a személyes reflexiót pedig a későbbi, hat történet utáni közös lezáráshoz tartjuk fenn. Ez a közös reflexió és döntéstérkép még nincs megvalósítva. A történetszövegek, döntési lehetőségek, négy hang és bibliai magyarázatok változatlanok.
+A `v0.3.1` jóváhagyott szerkezeti módosítása továbbra is felülírja a pénztárcás szövegkönyv korábbi 6. és 9. képernyőjének használatát. A külön befolyásoló kérdés kimarad, a személyes reflexiót pedig a későbbi, hat történet utáni közös lezáráshoz tartjuk fenn. Ez a közös reflexió és döntéstérkép még nincs megvalósítva. A történetszövegek, döntési lehetőségek, négy hang és bibliai magyarázatok változatlanok.
 
-1. Kezdőoldal.
+1. Kezdőoldal, történetválasztással és a kiválasztott történet saját bemutatásával.
 2. A történet.
 3. Első döntés.
 4. A négy hang: négy egymás utáni, külön léptethető nézőpont, egyetlen fő szakaszon belül.
 5. Második döntés, az elsővel azonos válaszlehetőségekkel és az első választás megmutatásával.
 6. A végső döntéshez tartozó négy történetfolytatás egyike, közvetlenül a második döntés megerősítése után.
-7. A választott ág bibliai reflexiója és a közös 8/K tanítás ugyanazon az oldalon. A rövid magyarázat látható; a teljes további magyarázat akadálymentes **Bővebben / Kevesebb** gombbal nyitható és csukható. Az igehely, a továbbgondolási kérdés és a közös tanítás mindig látható. A 8/K után a **Befejeztem a történetet** gomb elmenti a lezárás állapotát, majd ugyanitt jelenik meg: **Az első történet végére értél.** Ezután elérhető az **Újrajátszom a történetet** gomb. Nincs újabb kérdéssor, szövegmező, döntés-összehasonlítás vagy külön összegző képernyő.
+7. A választott ág bibliai reflexiója és a történet saját közös tanítása ugyanazon az oldalon. A rövid magyarázat látható; a teljes további magyarázat akadálymentes **Bővebben / Kevesebb** gombbal nyitható és csukható. Az igehely, a továbbgondolási kérdés és a közös tanítás mindig látható. A **Befejeztem a történetet** gomb elmenti a lezárás állapotát, majd ugyanitt jelenik meg az **Az első történet végére értél.**, illetve **A második történet végére értél.** visszajelzés. Ezután elérhető az **Újrajátszom a történetet** és a **Másik történetet választok** lehetőség. Nincs újabb kérdéssor, szövegmező, döntés-összehasonlítás vagy külön összegző képernyő.
+
+A pénztárcás történet közös tanítása a **Mit tanít a lelkiismeret?** (a forrásban 8/K); a tanárosé **Az igazság és a szeretet együtt** (7/K, Efézus 4,15). A tanáros történet részletes befejezései és az **Utolsó gondolat** kérdése a történetfolytatásban, válaszmező nélkül szerepelnek. A szövegkönyvhöz képest csak két jóváhagyott szerkesztési javítás történt: az A válasz mindkét döntésnél a „nézze át újra a dolgozatomat” megfogalmazást használja, és a B bibliai magyarázatából kikerült a „tanítás, a másik ember” fölösleges vesszője.
 
 Nincs erkölcsi pontszám, rangsor vagy a döntés megváltoztatásáért járó jutalom. A négy hang azonos súlyú vizuális karaktert kap. A pénztárca otthagyását nem azonosítja az alkalmazás a pénz eltulajdonításával. A lelkiismeretet nem tekinti automatikusan Isten közvetlen, tévedhetetlen hangjának.
 
@@ -61,25 +63,28 @@ Nincs erkölcsi pontszám, rangsor vagy a döntés megváltoztatásáért járó
 
 A haladás csak a saját böngészőlap `sessionStorage` tárolójába kerül, az `a_negy_hang_session_v1` kulcs alá. Frissítés után folytatható, a munkamenet a lap bezárásához kötődik. Nem kér nevet, e-mailt vagy regisztrációt, nem hoz létre tanulói azonosítót, és nem küld választ külső szolgáltatáshoz. Nincs analitika vagy távoli API.
 
-A tárolás tiltása vagy betelt tárhely esetén a játék memóriában tovább használható, az újratöltéssel kapcsolatos korlátot jelzi. Sérült mentésnél biztonságosan új munkamenetet indít. Újrakezdéskor csak a saját játékállapota törlődik, más alkalmazások tárolókulcsaihoz nem nyúl.
+A tárolás tiltása vagy betelt tárhely esetén a játék memóriában tovább használható, az újratöltéssel kapcsolatos korlátot jelzi. Sérült mentésnél biztonságosan új munkamenetet indít. Újrakezdéskor csak a kiválasztott történet aktuális játéka törlődik; a másik történet mentése és más alkalmazások tárolókulcsai megmaradnak.
 
-A mentési séma a `v0.3.1` kiadásban 3-as változatra frissül, a tárolókulcs megváltoztatása nélkül. A helyi állapot tartalmazza a séma verzióját, a történet azonosítóját, az aktuális szakaszt és hangot, az első és második döntést, azok különbözőségét (`decisionChanged`), valamint a lezárás állapotát. A különbözőség a második döntés kiválasztásáig `null`, utána a két döntés összehasonlításának logikai értéke. A befejezett játékmenet az újrajátszásig lezárt marad.
+A mentési séma a `v0.4.0` kiadásban 4-es változatra frissül, a tárolókulcs megváltoztatása nélkül. A gyökérállapot a séma verzióját, az aktív `storyId` értékét, a kezdőoldali választás állapotát (`selectingStory`) és a `stories` objektumot tartalmazza. Ebben történetazonosító szerint külön bejegyzés őrzi az aktuális szakaszt és hangot, az első és második döntést, azok különbözőségét (`decisionChanged`), valamint a lezárás állapotát. A különbözőség a második döntés kiválasztásáig `null`, utána a két döntés összehasonlításának logikai értéke.
 
-Az érvényes korábbi, 1-es és 2-es sémájú mentéseket ellenőrzés után átvesszük. A megszüntetett befolyásoló képernyőről közvetlenül a történetfolytatáshoz, a régi közös tanításról, személyes reflexióról és összegzésről a 7. képernyőhöz kerül a játékos. A két döntés és a befejezés állapota megmarad; a régi végső összegzés lezárt történetként áll helyre. A megszüntetett befolyásoló választást, háromválaszos reflexiót és szabad szöveget az új séma már nem tárolja és nem kéri be újra.
+A történetváltás és az újratöltés nem törli a másik történet korábbi döntéseit. A kiválasztott történet folytatható, a befejezett játékmenet az adott történet újrajátszásáig lezárt marad. Az **Újrajátszom a történetet** csak az aktív történetet állítja alaphelyzetbe.
 
-A közös eszközt a következő tanuló előtt az **Újrakezdés** művelettel lehet alapállapotba hozni. A böngésző saját lap-helyreállítási funkciója egy korábban bezárt munkamenetet is visszaállíthat.
+Az érvényes korábbi, 1-es, 2-es és 3-as sémájú mentéseket ellenőrzés után átvesszük a megfelelő történet bejegyzésébe, megőrizve a két döntést, a haladást és a befejezés állapotát. A régi megszüntetett befolyásoló képernyőről közvetlenül a történetfolytatáshoz, a régi közös tanításról, személyes reflexióról és összegzésről a 7. képernyőhöz kerül a játékos. A megszüntetett befolyásoló választást, háromválaszos reflexiót és szabad szöveget az új séma nem tárolja és nem kéri be újra.
+
+Közös eszközön új tanuló előtt új böngészőlapos munkamenetet kell kezdeni, hogy a korábbi tanuló egyik történethez tartozó döntései se maradjanak meg. Az **Újrakezdés** csak az éppen kiválasztott történetet törli. A böngésző saját lap-helyreállítási funkciója egy korábban bezárt munkamenetet is visszaállíthat.
 
 ## Fájlok
 
 - `index.html`: fejléc, folyamatjelző, képernyőhely és natív megerősítő párbeszédablak.
 - `css/styles.css`: a tananyagcsaládhoz illeszkedő megjelenés, mobilnézetek és fókuszjelzések.
-- `js/content.js`: a történet, hangok, befejezések, bibliai tanítások és reflexiós kérdések.
+- `js/content.js`: a két történet teljes tananyaga és képi hozzárendelései. A hangok neve, ikonja és színe közös; megszólalásuk, leírásuk és a közös tanítás történethez kötött.
 - `js/state.js`: tiszta állapotgép, érvényességi feltételek, mentés és helyreállítás.
 - `js/app.js`: a felület és eseményei; a szöveges tananyag adatból származik.
-- `js/illustrations.js`: a hét helyi jelenetkép elérési útja, mérete és magyar alternatív szövege.
+- `js/illustrations.js`: a tizenhárom helyi jelenetkép elérési útja, mérete és magyar alternatív szövege.
 - `js/version.js`: a központi verzióból generált statikus metaadat; `scripts/sync-version.cjs`: generálás és ellenőrzés.
 - `assets/`: saját SVG-jel és helyi, licencelt betűkészletek.
-- `docs/ANegyHang_9_kepernyos_lektoralt_szovegkonyv.docx`: a jóváhagyott szövegkönyv, változatlan eredeti fájl.
+- `docs/ANegyHang_9_kepernyos_lektoralt_szovegkonyv.docx`: a pénztárcás történet jóváhagyott szövegkönyve, változatlan eredeti fájl.
+- `docs/ANegyHang_2_tortenet_jovahagyott_forgatokonyv.docx`: a tanáros történet jóváhagyott forgatókönyve, változatlan eredeti fájl.
 - `scripts/read-approved-script.py`: a DOCX megbízható, Python-stdlib alapú kiolvasása a forráshűségteszthez.
 - `tests/`: állapot-, tananyag-, DOCX-forráshűség- és böngészőtesztek.
 - `playwright.config.cjs`, `package.json`, `package-lock.json`: reprodukálható fejlesztői tesztkörnyezet.
@@ -98,7 +103,7 @@ npm run test:browser
 
 A felhőkörnyezetben a konfiguráció felismeri a meglévő `/usr/bin/chromium` böngészőt; ott a külön böngészőtelepítés kihagyható. Másik Chromium a `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` változóval választható.
 
-Az állapotteszt 16 teljes utat ellenőriz (4 első döntés × 4 második döntés), továbbá a kötelező választásokat, a négy hang sorrendjét, a második döntés utáni közvetlen történetfolytatást, a helyben történő lezárást, a lezárt állapot védelmét, a régi mentések migrációját és az újrakezdést. A forráshűségteszt közvetlenül az eredeti DOCX bekezdéseivel hasonlítja össze a történetet, a hangokat és valamennyi rövid/teljes bibliai magyarázatot. Ehhez a Python 3 beépített ZIP/XML-kezelője elég, külön csomag nem kell. A Playwright asztali és mobilméreten vizsgálja mind a négy ágat, a hétszakaszos navigációt, a lenyitást és csukást, a közös tanítást, a 7. oldalon maradó lezárást, az újratöltést, a billentyűzetet és a képhibák melletti végigjátszást.
+Az állapotteszt 32 teljes utat ellenőriz (2 történet × 4 első döntés × 4 második döntés), továbbá a kötelező választásokat, a négy hang sorrendjét, a második döntés utáni közvetlen történetfolytatást, a helyben történő lezárást, a lezárt állapot védelmét, a régi mentések migrációját, a történetváltáskor megmaradó döntéseket és a csak kiválasztott történetre ható újrakezdést. A forráshűségteszt közvetlenül az eredeti DOCX bekezdéseivel hasonlítja össze mindkét történetet, a történethez kötött hangokat és valamennyi rövid/teljes bibliai magyarázatot. Ehhez a Python 3 beépített ZIP/XML-kezelője elég, külön csomag nem kell. A Playwright asztali és mobilméreten vizsgálja mind a nyolc ágat, a történetválasztást és -váltást, a hétszakaszos navigációt, a lenyitást és csukást, a közös tanítást, a 7. oldalon maradó lezárást, az újratöltést, a billentyűzetet és a képhibák melletti végigjátszást.
 
 ## Arculati és tartalmi alap
 
@@ -106,7 +111,11 @@ Elsődleges vizuális referencia: **Digitális lelkiismeret**. A sötétkék fej
 
 A kék elsődleges gomb sötétített változata a fehér szöveg olvashatóságát szolgálja. A helyi betűkészletek forrása, változata, ellenőrzőösszege és licence az `assets/fonts/` mappában található.
 
-A történet, a hangok, a bibliai magyarázatok és a közös tanítás szövegét a jóváhagyott kilencképernyős Word-szövegkönyv adja. A rövid és a lenyitható teljes magyarázatok önálló ágonként, változatlan megfogalmazással szerepelnek. A szó szerinti igerészletek pontos hivatkozással és RÚF 2014-jelöléssel különülnek el a magyarázó szövegtől. A `v0.2.2`-ben jóváhagyott képek és a tananyagcsalád arculata változatlan maradt.
+A történetek, hangok, bibliai magyarázatok és közös tanítások szövegét a két jóváhagyott Word-szövegkönyv adja. A rövid és a lenyitható teljes magyarázatok önálló ágonként, változatlan megfogalmazással szerepelnek. A szó szerinti igerészletek pontos hivatkozással és RÚF 2014-jelöléssel különülnek el a magyarázó szövegtől. A `v0.2.2`-ben jóváhagyott képek és a tananyagcsalád arculata változatlan maradt.
+
+## A második történet képei – v0.4.0
+
+A tanáros történet hat új, felhasználó által készített és külön jóváhagyott eredeti PNG-je a `design/illustrations/sources/` mappában marad változatlanul. Ezekből az `assets/illustrations/` mappába 1280 × 720 képpontos PNG- és optimalizált WebP-változat készült: `hero-teacher-paths`, `teacher-scene-opening`, `teacher-ending-private-talk`, `teacher-ending-argument`, `teacher-ending-silence` és `teacher-ending-homeroom-help`. Nem történt új képgenerálás. A négy hang szakasza a jóváhagyott nyitóképet használja visszafogott háttérként; külön hangillusztráció nem készült. Az első történet hét képe és hozzárendelése változatlan. A feldolgozás részleteit és a forrásokat a [grafikai dokumentáció](design/illustrations/README.md) rögzíti.
 
 ## Javítófrissítés – v0.2.2
 
@@ -122,8 +131,8 @@ Az aktív eredeti PNG-ket a `design/illustrations/sources/` mappa, a jelenetek l
 
 ## Későbbi fejlesztés
 
-- A további öt történet tartalmi kidolgozása és ellenőrzése.
-- A történetválasztás, valamint a hatodik történet utáni közös személyes reflexió és döntési térkép.
+- A további négy történet tartalmi kidolgozása és ellenőrzése.
+- A hatodik történet utáni közös személyes reflexió és döntési térkép.
 - Valós tanulói/tanári próba, további böngészők és segítő technológiák vizsgálata.
 
-Az állapotgép történetazonosítóval dolgozik. Egy következő történet a `stories` tömb azonos sémájú elemével, négy befejezéssel és a hozzá tartozó tesztekkel bővíthető; a történetválasztó és a közös térkép külön későbbi feladat. Jelenleg kizárólag a pénztárcás történet szerepel a játékban.
+Az állapotgép történetazonosítóval dolgozik. Egy következő történet a `stories` tömb azonos sémájú elemével vehető fel: saját `start` bemutatás, `intro`, `choices`, `voices`, `voicesClosing`, `endings`, `commonTeaching`, `images` és `completionMessage` adatokkal. Az opcionális második döntési bevezető és az `Utolsó gondolat` is tartalmi adat. A képelérési utak a `js/illustrations.js` metaadatával és a megfelelő tesztekkel egészítendők ki. Új történethez nem kell a teljes játékmenetet újraírni. A hat történet utáni közös döntéstérkép külön későbbi feladat; jelenleg csak a két teljes történet érhető el.

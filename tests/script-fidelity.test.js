@@ -24,7 +24,7 @@ const verse = number => {
   assert.ok(split > 0, `DOCX scripture ${number}`);
   return { quote: unquote(text.slice(0, split)), reference: text.slice(split + 3) };
 };
-const story = content.stories[0];
+const story = content.stories.find(item => item.id === 'wallet');
 
 test('A bevezetés, döntések és teljes hangszövegek a jóváhagyott Wordet követik', () => {
   assert.equal(content.title, paragraph(9));
@@ -41,10 +41,11 @@ test('A bevezetés, döntések és teljes hangszövegek a jóváhagyott Wordet k
   const speeches = [[78], [83], [88, 89], [94]];
   for (const [index, voice] of content.voices.entries()) {
     assert.equal(voice.label, labels[index]);
-    assert.equal(voice.description, paragraph(descriptions[index]));
-    assert.equal(voice.speech, unquote(paragraphs(speeches[index]).join('\n\n')));
+    assert.equal(story.voices[index].id, voice.id);
+    assert.equal(story.voices[index].description, paragraph(descriptions[index]));
+    assert.equal(story.voices[index].speech, unquote(paragraphs(speeches[index]).join('\n\n')));
   }
-  assert.equal(content.voicesClosing, paragraph(96));
+  assert.equal(story.voicesClosing, paragraph(96));
   assert.equal(content.influenceQuestion, paragraph(123));
   assert.deepEqual(content.influences.map(item => item.text), paragraphs([127, 128, 129, 130, 131]));
 });
@@ -71,7 +72,7 @@ test('Mind a négy folytatás és teljes bibliai magyarázat szó szerint a Word
 });
 
 test('A közös 8/K tanítás és a későbbre félretett reflexiós forrásszöveg változatlan', () => {
-  const common = content.commonTeaching;
+  const common = story.commonTeaching;
   assert.equal(common.title, paragraph(241));
   assert.equal(common.subtitle, paragraph(243));
   assert.deepEqual(common.paragraphs, paragraphs([244, 245, 246]));
@@ -82,7 +83,7 @@ test('A közös 8/K tanítás és a későbbre félretett reflexiós forrásszö
   assert.equal(content.takeawayQuestion, paragraph(268));
   assert.equal(content.finishLabel, paragraph(272));
   // The v0.3.1 structural instruction overrides the old manuscript's ending.
-  assert.equal(content.completionMessage, 'Az első történet végére értél.');
+  assert.equal(story.completionMessage, 'Az első történet végére értél.');
   assert.ok(paragraph(273).includes('„' + content.replayLabel + '”'));
 });
 

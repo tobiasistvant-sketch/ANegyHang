@@ -13,7 +13,13 @@
     'wallet-ending-return-full': 'Fiatal diák keze a barna pénztárcát nyújtja át egy rendőrnek a rendőrségi recepción.',
     'wallet-ending-keep-money': 'A buszmegállóban egy pénztárcát ábrázoló hirdetést nézel; az előtérben az új fejhallgató látszik.',
     'wallet-ending-return-documents': 'A kissé nyitott barna pénztárcát adod át a rendőrnek, benne az igazolvánnyal és két bankkártyával.',
-    'wallet-ending-walk-away': 'Néhány lépésről visszanézve egy járókelőt látsz lehajolni a pad mellett heverő pénztárcához.'
+    'wallet-ending-walk-away': 'Néhány lépésről visszanézve egy járókelőt látsz lehajolni a pad mellett heverő pénztárcához.',
+    'hero-teacher-paths': 'A tanteremben ülve egy piros 5-ösre értékelt dolgozatot tartasz a kezedben; előtted a tanár és az osztálytársaid látszanak.',
+    'teacher-scene-opening': 'A kezedben piros 5-ös dolgozat, melletted egy osztálytársad 7-es dolgozata; a tanár feléd fordul, néhány diák nevet.',
+    'teacher-ending-private-talk': 'Az óra után a tanár az asztalánál átnézi a kezedben tartott dolgozatot, és tollával az egyik megoldásra mutat.',
+    'teacher-ending-argument': 'Az osztály előtt felemelt kézzel vitázol a tanárral, miközben a másik kezedben az 5-ös dolgozatot tartod.',
+    'teacher-ending-silence': 'Csendben a füzeted mögé teszed az 5-ös dolgozatot, miközben a tanár a táblánál folytatja az órát.',
+    'teacher-ending-homeroom-help': 'A tanár és az osztályfőnök együtt vizsgálja a kezedben tartott dolgozatot; a tanár tollával a feladatra mutat.'
   };
   return Object.freeze(Object.fromEntries(Object.entries(descriptions).map(([id, alt]) => [id, Object.freeze({
     png: `assets/illustrations/${id}.png`,
