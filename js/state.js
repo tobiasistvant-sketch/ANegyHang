@@ -7,9 +7,13 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
 
-  const VERSION = 1;
+  const VERSION = 2;
   const STORAGE_KEY = 'a_negy_hang_session_v1';
   const STEPS = Object.freeze([
+    'start', 'situation', 'initial', 'voices', 'final', 'influence',
+    'continuation', 'biblical', 'reflection'
+  ]);
+  const LEGACY_STEPS = Object.freeze([
     'start', 'situation', 'initial', 'voices', 'final', 'influence',
     'continuation', 'biblical', 'teaching', 'reflection', 'summary'
   ]);
@@ -24,7 +28,8 @@
       finalChoice: null,
       influence: null,
       reflection: null,
-      takeaway: ''
+      takeaway: '',
+      completed: false
     };
   }
 
@@ -45,34 +50,41 @@
 
   /** Return a whitelisted state, or null for an incompatible/corrupt save. */
   function normalize(candidate, content) {
+    return normalizeVersion(candidate, content, VERSION, STEPS);
+  }
+
+  function normalizeVersion(candidate, content, version, steps) {
     if (!candidate || typeof candidate !== 'object' || Array.isArray(candidate) ||
-        candidate.version !== VERSION || !STEPS.includes(candidate.step) ||
-        typeof candidate.storyId !== 'string' || typeof candidate.takeaway !== 'string') return null;
+        candidate.version !== version || !steps.includes(candidate.step) ||
+        typeof candidate.storyId !== 'string' || typeof candidate.takeaway !== 'string' ||
+        (version === VERSION && typeof candidate.completed !== 'boolean')) return null;
     const story = storyFor(candidate.storyId, content);
     if (!story || !Array.isArray(story.choices) || !Array.isArray(content.voices) || !content.voices.length) return null;
     const choices = ids(story.choices);
     const influences = ids(content.influences);
     const reflections = ids(content.finalReflections);
     const lastVoice = content.voices.length - 1;
-    const index = STEPS.indexOf(candidate.step);
+    const index = steps.indexOf(candidate.step);
 
     if (!Number.isInteger(candidate.voiceIndex) || candidate.voiceIndex < 0 || candidate.voiceIndex > lastVoice) return null;
-    if (index < STEPS.indexOf('voices') && candidate.voiceIndex !== 0) return null;
-    if (index > STEPS.indexOf('voices') && candidate.voiceIndex !== lastVoice) return null;
+    if (index < steps.indexOf('voices') && candidate.voiceIndex !== 0) return null;
+    if (index > steps.indexOf('voices') && candidate.voiceIndex !== lastVoice) return null;
 
     const fieldValid = (value, validIds, earliest, required) => {
-      if (index < STEPS.indexOf(earliest)) return value === null;
-      if (index >= STEPS.indexOf(required)) return validIds.has(value);
+      if (index < steps.indexOf(earliest)) return value === null;
+      if (required && index >= steps.indexOf(required)) return validIds.has(value);
       return value === null || validIds.has(value);
     };
     if (!fieldValid(candidate.initialChoice, choices, 'initial', 'voices') ||
         !fieldValid(candidate.finalChoice, choices, 'final', 'influence') ||
         !fieldValid(candidate.influence, influences, 'influence', 'continuation') ||
-        !fieldValid(candidate.reflection, reflections, 'reflection', 'summary') ||
-        (index < STEPS.indexOf('reflection') && candidate.takeaway !== '')) return null;
+        !fieldValid(candidate.reflection, reflections, 'reflection', version === 1 ? 'summary' : null) ||
+        (index < steps.indexOf('reflection') && candidate.takeaway !== '') ||
+        (version === VERSION && candidate.completed &&
+          (candidate.step !== 'reflection' || !reflections.has(candidate.reflection)))) return null;
 
-    return {
-      version: VERSION,
+    const state = {
+      version,
       storyId: candidate.storyId,
       step: candidate.step,
       voiceIndex: candidate.voiceIndex,
@@ -82,6 +94,20 @@
       reflection: candidate.reflection,
       takeaway: candidate.takeaway
     };
+    if (version === VERSION) state.completed = candidate.completed;
+    return state;
+  }
+
+  /** Validate the full old progression before converting any removed step. */
+  function migrateLegacy(candidate, content) {
+    const legacy = normalizeVersion(candidate, content, 1, LEGACY_STEPS);
+    if (!legacy) return null;
+    return normalize({
+      ...legacy,
+      version: VERSION,
+      step: legacy.step === 'teaching' ? 'biblical' : legacy.step === 'summary' ? 'reflection' : legacy.step,
+      completed: legacy.step === 'summary'
+    }, content);
   }
 
   function validate(state, content) {
@@ -94,6 +120,7 @@
     const next = { ...current };
     if (!action || typeof action.type !== 'string') return next;
     if (action.type === 'RESTART') return createState(current.storyId);
+    if (current.completed) return next;
     if (action.type === 'START' && current.step === 'start') {
       next.step = 'situation';
       return next;
@@ -112,6 +139,8 @@
       next.reflection = action.value;
     } else if (action.type === 'SET_TAKEAWAY' && current.step === 'reflection' && typeof action.value === 'string') {
       next.takeaway = action.value;
+    } else if (action.type === 'FINISH' && current.step === 'reflection' && current.reflection) {
+      next.completed = true;
     } else if (action.type === 'NEXT') {
       switch (current.step) {
         case 'situation': next.step = 'initial'; break;
@@ -123,9 +152,7 @@
         case 'final': if (current.finalChoice) next.step = 'influence'; break;
         case 'influence': if (current.influence) next.step = 'continuation'; break;
         case 'continuation': next.step = 'biblical'; break;
-        case 'biblical': next.step = 'teaching'; break;
-        case 'teaching': next.step = 'reflection'; break;
-        case 'reflection': if (current.reflection) next.step = 'summary'; break;
+        case 'biblical': next.step = 'reflection'; break;
         default: break;
       }
     }
@@ -145,7 +172,8 @@
         version: state.version, storyId: state.storyId, step: state.step,
         voiceIndex: state.voiceIndex, initialChoice: state.initialChoice,
         finalChoice: state.finalChoice, influence: state.influence,
-        reflection: state.reflection, takeaway: state.takeaway
+        reflection: state.reflection, takeaway: state.takeaway,
+        completed: state.completed
       }));
       return true;
     } catch (_) {
@@ -163,7 +191,11 @@
     }
     let state = null;
     if (raw !== null) {
-      try { state = normalize(JSON.parse(raw), content); } catch (_) { /* recover below */ }
+      try {
+        const candidate = JSON.parse(raw);
+        state = candidate && candidate.version === 1
+          ? migrateLegacy(candidate, content) : normalize(candidate, content);
+      } catch (_) { /* recover below */ }
     }
     const recovered = raw !== null && !state;
     state = state || createState(defaultStoryId(content));

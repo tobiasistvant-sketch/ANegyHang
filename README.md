@@ -41,18 +41,19 @@ Az npm `version` életciklus-parancsa automatikusan létrehozza a böngésző á
 
 A GitHub Pages a `main` ág gyökerében lévő, commitolt fájlokat publikálja. Az új verziójelzés a megfelelő commit sikeres Pages-közzététele után jelenik meg; pusztán egy helyi verziófrissítés még nem módosítja az élő oldalt. Commitazonosító szándékosan nem szerepel a felületen: a jelenlegi, ágból történő statikus közzététel mellett egy kézzel beírt hash nem igazolná megbízhatóan a ténylegesen kiszolgált kiadást. Ehhez később ellenőrzött kiadási metaadatot előállító publikálási folyamat szükséges.
 
-## A működő folyamat
+## A kilenc fő képernyő – v0.3.0
 
-- Nyitólap és az élethelyzet bemutatása.
-- Első, ösztönös döntés a négy megadott válasz közül.
-- Vágy, Többiek, Félelem és Lelkiismeret: négy, sorrendben megjelenő, egyenként továbbkattintható megszólalás.
-- Második döntés ugyanazokból a lehetőségekből, az első döntés megmutatásával.
-- A leginkább befolyásoló hang vagy a saját, több szempontú mérlegelés kiválasztása.
-- Négy különböző történetfolytatás, kizárólag a **második döntés** alapján.
-- Választáshoz kapcsolódó bibliai tanítás és kérdés. A pénz megtartásánál Zákeus története és a jóvátétel lehetősége is megjelenik.
-- Közös tanítás a lelkiismeretről: tévedhetőség, vizsgálat a Szentírás fényében, változás, bocsánatkérés és jóvátétel.
-- Záró reflexió, opcionális saját gondolat és személyes összesítő kártya.
-- Megerősítéshez kötött újrakezdés.
+A jóváhagyott tartalmi alap a [lektorált Word-szövegkönyv](docs/ANegyHang_9_kepernyos_lektoralt_szovegkonyv.docx). A dokumentum változatlanul megmarad a `docs` mappában; a szerkesztői és fejlesztési megjegyzései megvalósítási utasítások, nem tanulói szövegek.
+
+1. Kezdőoldal.
+2. A történet.
+3. Első döntés.
+4. A négy hang: négy egymás utáni, külön léptethető nézőpont, egyetlen fő szakaszon belül.
+5. Második döntés, az elsővel azonos válaszlehetőségekkel és az első választás megmutatásával.
+6. Befolyásoló tényező.
+7. A végső döntéshez tartozó négy történetfolytatás egyike.
+8. A választott ág bibliai reflexiója és a közös 8/K tanítás ugyanazon az oldalon. A rövid magyarázat látható; a teljes további magyarázat akadálymentes **Bővebben / Kevesebb** gombbal nyitható és csukható. Az igehely, a továbbgondolási kérdés és a közös tanítás mindig látható.
+9. Személyes reflexió és lezárás: a két döntés, a változtatás és a befolyásoló tényező egyszer szerepel; ezután a három reflexiós lehetőség és az opcionális szövegmező következik. A **Befejeztem a történetet** menti és lezárja a választást, majd ugyanitt jelenik meg: **A történet végére értél.** Nincs külön összegző képernyő. A lezárt válaszok olvashatók, az újrajátszás továbbra is elérhető.
 
 Nincs erkölcsi pontszám, rangsor vagy a döntés megváltoztatásáért járó jutalom. A négy hang azonos súlyú vizuális karaktert kap. A pénztárca otthagyását nem azonosítja az alkalmazás a pénz eltulajdonításával. A lelkiismeretet nem tekinti automatikusan Isten közvetlen, tévedhetetlen hangjának.
 
@@ -60,7 +61,9 @@ Nincs erkölcsi pontszám, rangsor vagy a döntés megváltoztatásáért járó
 
 A haladás csak a saját böngészőlap `sessionStorage` tárolójába kerül, az `a_negy_hang_session_v1` kulcs alá. Frissítés után folytatható, a munkamenet a lap bezárásához kötődik. Nem kér nevet, e-mailt vagy regisztrációt, nem hoz létre tanulói azonosítót, és nem küld választ külső szolgáltatáshoz. Nincs analitika vagy távoli API.
 
-A tárolás tiltása vagy betelt tárhely esetén a játék memóriában tovább használható, az újratöltéssel kapcsolatos korlátot jelzi. Sérült mentésnél biztonságosan új munkamenetet indít. A szabad szöveg kizárólag `value` és `textContent` útján kerül a felületre. Újrakezdéskor csak a saját játékállapota törlődik, más alkalmazások tárolókulcsaihoz nem nyúl.
+A tárolás tiltása vagy betelt tárhely esetén a játék memóriában tovább használható, az újratöltéssel kapcsolatos korlátot jelzi. Sérült mentésnél biztonságosan új munkamenetet indít. A szabad szöveg szövegként, a mező `value` tulajdonságán keresztül kerül a felületre, nem HTML-ként. Újrakezdéskor csak a saját játékállapota törlődik, más alkalmazások tárolókulcsaihoz nem nyúl.
+
+A mentési séma a `v0.3.0` kiadásban 2-es változatra frissül, a tárolókulcs megváltoztatása nélkül. Az érvényes korábbi mentések döntései és reflexiói megmaradnak: a régi közös tanítás a 8. oldalra kerül, a korábbi végső összegzés pedig lezárt 9. oldalként áll helyre. A lezárásig a reflexió szerkeszthető, utána a lezárási jelzés és a mentett válasz ugyanazon az oldalon marad.
 
 A közös eszközt a következő tanuló előtt az **Újrakezdés** művelettel lehet alapállapotba hozni. A böngésző saját lap-helyreállítási funkciója egy korábban bezárt munkamenetet is visszaállíthat.
 
@@ -74,7 +77,9 @@ A közös eszközt a következő tanuló előtt az **Újrakezdés** művelettel 
 - `js/illustrations.js`: a hét helyi jelenetkép elérési útja, mérete és magyar alternatív szövege.
 - `js/version.js`: a központi verzióból generált statikus metaadat; `scripts/sync-version.cjs`: generálás és ellenőrzés.
 - `assets/`: saját SVG-jel és helyi, licencelt betűkészletek.
-- `tests/`: állapot-, tananyag- és böngészőtesztek.
+- `docs/ANegyHang_9_kepernyos_lektoralt_szovegkonyv.docx`: a jóváhagyott szövegkönyv, változatlan eredeti fájl.
+- `scripts/read-approved-script.py`: a DOCX megbízható, Python-stdlib alapú kiolvasása a forráshűségteszthez.
+- `tests/`: állapot-, tananyag-, DOCX-forráshűség- és böngészőtesztek.
 - `playwright.config.cjs`, `package.json`, `package-lock.json`: reprodukálható fejlesztői tesztkörnyezet.
 - `.github/workflows/checks.yml`: automatikus tesztelés; nem publikálja az alkalmazást.
 
@@ -91,7 +96,7 @@ npm run test:browser
 
 A felhőkörnyezetben a konfiguráció felismeri a meglévő `/usr/bin/chromium` böngészőt; ott a külön böngészőtelepítés kihagyható. Másik Chromium a `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` változóval választható.
 
-Az állapotteszt 240 teljes utat ellenőriz (16 első/második döntéspár × 5 befolyás × 3 reflexió), továbbá a kötelező választásokat, a négy hang sorrendjét, újratöltést, sérült/tiltott tárolást és az újrakezdést. A tananyagteszt védi az eredeti párbeszédeket és a lényeges teológiai megkülönböztetéseket. A Playwright asztali és mobilméreten vizsgálja mind a négy befejezést, a szöveges válasz megőrzését, a HTML-szerű bemenet biztonságát, a billentyűzetet és a párbeszédablakot.
+Az állapotteszt 240 teljes utat ellenőriz (16 első/második döntéspár × 5 befolyás × 3 reflexió), továbbá a kötelező választásokat, a négy hang sorrendjét, a helyben történő lezárást, az írásvédett lezárt állapotot, a régi mentések migrációját és az újrakezdést. A forráshűségteszt közvetlenül az eredeti DOCX bekezdéseivel hasonlítja össze a történetet, a hangokat és valamennyi rövid/teljes bibliai magyarázatot. Ehhez a Python 3 beépített ZIP/XML-kezelője elég, külön csomag nem kell. A Playwright asztali és mobilméreten vizsgálja mind a négy ágat, a lenyitást és csukást, a közös tanítást, a 9. oldalon maradó lezárást, az újratöltést, a biztonságos szövegkezelést, a billentyűzetet és a képhibák melletti végigjátszást.
 
 ## Arculati és tartalmi alap
 
@@ -99,7 +104,7 @@ Elsődleges vizuális referencia: **Digitális lelkiismeret**. A sötétkék fej
 
 A kék elsődleges gomb sötétített változata a fehér szöveg olvashatóságát szolgálja. A helyi betűkészletek forrása, változata, ellenőrzőösszege és licence az `assets/fonts/` mappában található.
 
-A történet és a tanítás alapja a fejlesztési feladatban megadott magyar szöveg. Az igehelyekhez adott magyarázatok összefoglalások, nem szó szerinti bibliai idézetek. A külön idézett parancsolat („Ne lopj!” – 2Mózes 20,15) és a közös tanítás kiemelése („de mindent vizsgáljatok meg: a jót tartsátok meg” – 1Thesszalonika 5,21, részlet) a RÚF 2014 szövegét követi. Az 1Thesszalonika-idézet a felhasználó által megadott részlet; [forrása a Bible.com-on](https://www.bible.com/hu/bible/920/1TH.5.21.R%C3%9AF).
+A történet, a hangok, a bibliai magyarázatok és a közös tanítás szövegét a jóváhagyott kilencképernyős Word-szövegkönyv adja. A rövid és a lenyitható teljes magyarázatok önálló ágonként, változatlan megfogalmazással szerepelnek. A szó szerinti igerészletek pontos hivatkozással és RÚF 2014-jelöléssel különülnek el a magyarázó szövegtől. A `v0.2.2`-ben jóváhagyott képek és a tananyagcsalád arculata változatlan maradt.
 
 ## Javítófrissítés – v0.2.2
 

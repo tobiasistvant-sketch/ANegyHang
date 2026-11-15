@@ -37,7 +37,10 @@
   const heading = (eyebrow, title, lead = '') => `<header class="screen-heading"><p class="eyebrow">${escape(eyebrow)}</p><h1 id="screen-title" tabindex="-1">${escape(title)}</h1>${lead ? `<p class="lead">${escape(lead)}</p>` : ''}</header>`;
   const button = (label, action = 'next', disabled = false, secondary = false) => `<button type="button" class="btn ${secondary ? 'btn-secondary' : 'btn-primary'}" data-action="${action}" ${disabled ? 'disabled' : ''}>${escape(label)}${secondary ? '' : icon('arrow')}</button>`;
   const paragraphs = items => items.map(item => `<p>${escape(item)}</p>`).join('');
-  const scripture = item => `<section class="scripture-note"><p class="scripture-reference">${escape(item.reference)}${item.translation ? ` – ${escape(item.translation)}` : ''}</p><h2>${escape(item.label)}</h2><p><strong>Magyarázat:</strong> ${escape(item.explanation)}</p></section>`;
+  function branchScripture(item) {
+    const panelId = `branch-explanation-${state.finalChoice}`;
+    return `<section class="scripture-note"><p class="scripture-reference">${escape(item.reference)}${item.translation ? ` – ${escape(item.translation)}` : ''}</p><h2>${escape(item.label)}</h2><blockquote class="bible-quote">„${escape(item.quote)}”</blockquote><div class="scripture-short">${paragraphs(item.short)}</div><button type="button" class="btn btn-secondary explanation-toggle" data-action="toggle-explanation" aria-expanded="false" aria-controls="${panelId}">Bővebben</button><div class="expanded-explanation" id="${panelId}" hidden>${paragraphs(item.more)}</div></section>`;
+  }
   const voiceStyle = voice => `--voice-color:${voice.color};--voice-tint:${tints[voice.id]}`;
   const endingScenes = { A: 'wallet-ending-return-full', B: 'wallet-ending-keep-money', C: 'wallet-ending-return-documents', D: 'wallet-ending-walk-away' };
   function scene(id, className = '', eager = false) {
@@ -48,7 +51,7 @@
 
 
   function canAdvance() {
-    return state.step === 'initial' ? !!state.initialChoice : state.step === 'final' ? !!state.finalChoice : state.step === 'influence' ? !!state.influence : state.step === 'reflection' ? !!state.reflection : true;
+    return state.step === 'initial' ? !!state.initialChoice : state.step === 'final' ? !!state.finalChoice : state.step === 'influence' ? !!state.influence : state.step === 'reflection' ? !!state.reflection && !state.completed : true;
   }
   function choices(name, items, selected) {
     return `<div class="choice-list">${items.map(item => `<label class="choice-card" for="${name}-${item.id}"><input id="${name}-${item.id}" type="radio" name="${name}" value="${item.id}" ${selected === item.id ? 'checked' : ''}><span class="choice-letter" aria-hidden="true">${escape(item.letter || item.id)}</span><span class="choice-copy">${escape(item.text)}</span></label>`).join('')}</div>`;
@@ -60,7 +63,7 @@
     return `<section class="hero"><div class="hero-copy"><p class="eyebrow">Interaktív döntéstörténet · XI. osztály</p><h1 class="hero-title" id="screen-title" tabindex="-1">A NÉGY HANG</h1><h2 class="hero-subtitle">${escape(content.subtitle)}</h2><p class="lead">Először az első megérzésedre hallgatsz. Aztán négy nézőpontot ismersz meg. A végső döntést te hozod meg.</p><p class="story-label">A megtalált pénztárca</p><div class="actions">${button('Kezdjük a történetet', 'start')}</div><p class="session-note">A haladásod ezen a böngészőlapon újratöltés után is megmarad. A lap bezárásakor a munkamenet véget ér.</p><p class="app-version" data-app-version hidden></p></div><div class="hero-art">${scene('hero-four-paths', 'hero-scene', true)}<div class="voice-roster">${content.voices.map(voice => `<div class="voice-mini" style="${voiceStyle(voice)}"><span class="voice-mini-icon">${icon(voice.icon)}</span><span>${escape(voice.name)}</span></div>`).join('')}</div></div></section><div class="feature-grid"><section class="feature-card">${icon('exchange')}<h2>Két döntés</h2><p>Az első megérzésed és az átgondolt választásod külön is megmarad.</p></section><section class="feature-card">${icon('mixed')}<h2>Négy nézőpont</h2><p>Figyeld meg, mi befolyásol, amikor választanod kell!</p></section><section class="feature-card">${icon('notes')}<h2>Saját felismerés</h2><p>Nincs pontozás. A történet a személyes mérlegelésedet segíti.</p></section></div>`;
   }
   function renderSituation() {
-    return `${heading('A történet kezdete', story().title)}<div class="content-grid"><article class="story-card"><div class="story-text">${paragraphs(story().intro)}</div><p class="story-question">${escape(story().question)}</p><div class="actions">${button('Meghozom az első döntésem')}</div></article><aside class="context-card">${scene('wallet-scene-opening', 'context-scene')}<p class="eyebrow">Hazafelé · A buszmegálló</p><ul class="context-facts"><li><strong>500 lej</strong> a pénztárcában</li><li>Személyi igazolvány és két bankkártya</li><li>Néhány perc a busz érkezéséig</li></ul></aside></div>`;
+    return `${heading('A történet kezdete', story().title)}<div class="content-grid"><article class="story-card"><div class="story-text">${paragraphs(story().intro)}</div><p class="story-question">${escape(story().question)}</p><div class="actions">${button('Meghozom az első döntésem')}</div></article><aside class="context-card">${scene('wallet-scene-opening', 'context-scene')}<p class="eyebrow">Hazafelé · A buszmegálló</p><ul class="context-facts"><li><strong>500 lej</strong> a pénztárcában</li><li>Személyi igazolvány és két bankkártya</li><li>Pillanatokon belül a busz érkezik</li></ul></aside></div>`;
   }
   function renderDecision(final) {
     const name = final ? 'final' : 'initial';
@@ -86,30 +89,23 @@
   }
   function renderBiblical() {
     const ending = engine.getEnding(state, content);
-    return `${heading('Bibliai reflexió', 'A döntés a Biblia fényében')}<section class="reflection-panel"><h2 class="panel-title">Mit mutat meg ez a választás?</h2><p class="teaching-text">${escape(ending.teaching)}</p></section>${scripture(ending.scripture)}${ending.additionalScriptures.map(scripture).join('')}<section class="panel branch-question"><p class="eyebrow">Gondold tovább!</p><p>${escape(ending.question)}</p></section><div class="actions">${button('Mit tanít a lelkiismeret?')}</div>`;
-  }
-  function renderTeaching() {
     const teaching = content.commonTeaching;
-    return `${heading('Közös útravaló', teaching.title)}<article class="teaching-panel"><div class="story-text">${paragraphs(teaching.paragraphs)}</div><blockquote class="highlight-quote">„${escape(teaching.highlight)}”</blockquote><p class="scripture-reference">${escape(teaching.highlightReference)}</p></article>${scripture(teaching.scripture)}<section class="reflection-panel"><p class="teaching-text">${escape(teaching.closing)}</p></section><div class="actions">${button('A saját gondolataim')}</div>`;
+    return `${heading('Bibliai reflexió', 'A döntés a Biblia fényében')}<section class="reflection-panel"><h2 class="panel-title">Mit mutat meg ez a választás?</h2><p class="teaching-text">${escape(ending.teaching)}</p></section>${branchScripture(ending.scripture)}<section class="panel branch-question"><p class="eyebrow">Gondold tovább!</p><p>${escape(ending.question)}</p></section><section class="teaching-panel common-teaching" data-common-teaching><h2>${escape(teaching.title)}</h2><h3 class="common-subtitle">${escape(teaching.subtitle)}</h3><div class="story-text">${paragraphs(teaching.paragraphs)}</div><blockquote class="highlight-quote">„${escape(teaching.highlight)}”</blockquote><p class="scripture-reference">${escape(teaching.highlightReference)}</p></section><div class="actions">${button('A saját gondolataim')}</div>`;
   }
   function renderReflection() {
-    return `${heading('A saját felismerésed', 'Nézz vissza a döntésedre!')}<section class="summary-card">${decisionPair()}</section><section class="panel"><fieldset class="choice-fieldset"><legend>${escape(content.reflectionQuestion)}</legend>${choices('reflection', content.finalReflections.map((item, i) => ({ ...item, letter: i + 1 })), state.reflection)}</fieldset><label class="takeaway-label" for="takeaway">${escape(content.takeawayQuestion)} <span>(nem kötelező)</span></label><textarea id="takeaway" rows="4" placeholder="Ide írhatod a saját gondolatodat…"></textarea><div class="actions">${button('Összegzés megtekintése', 'next', !canAdvance())}</div></section>`;
-  }
-  function renderSummary() {
-    const reflection = content.finalReflections.find(item => item.id === state.reflection);
-    return `${heading('Személyes összegzés', 'A te döntéstörténeted', story().title)}<article class="summary-card">${decisionPair()}<section class="reflection-answer"><h2>Ahogyan most látod</h2><p>${escape(reflection.text)}</p></section><section class="takeaway"><h2>A gondolat, amelyet magaddal viszel</h2><p id="takeaway-summary"></p></section><p class="summary-note">Az első történet végére értél.</p></article><div class="actions">${button('Újrajátszom a történetet', 'restart', false, true)}</div>`;
+    const completed = state.completed;
+    return `${heading('A saját felismerésed', 'Nézz vissza a döntésedre!')}<section class="summary-card">${decisionPair()}</section><section class="panel"><fieldset class="choice-fieldset" ${completed ? 'disabled' : ''}><legend>${escape(content.reflectionQuestion)}</legend>${choices('reflection', content.finalReflections.map((item, i) => ({ ...item, letter: i + 1 })), state.reflection)}</fieldset><label class="takeaway-label" for="takeaway">${escape(content.takeawayQuestion)} <span>(nem kötelező)</span></label><textarea id="takeaway" rows="4" placeholder="Ide írhatod a saját gondolatodat…" ${completed ? 'readonly' : ''}></textarea>${completed ? `<p id="completion-feedback" class="completion-feedback" role="status" tabindex="-1">${escape(content.completionMessage)}</p><div class="actions">${button(content.replayLabel, 'restart', false, true)}</div>` : `<div class="actions">${button(content.finishLabel, 'finish', !canAdvance())}</div>`}</section>`;
   }
 
   function updateProgress() {
-    const chapters = ['A helyzet', 'A hangok', 'A döntésed', 'Útravaló', 'Reflexió'];
-    const chapterMap = { start: 0, situation: 0, initial: 0, voices: 1, final: 2, influence: 2, continuation: 2, biblical: 3, teaching: 3, reflection: 4, summary: 4 };
-    const current = chapterMap[state.step];
-    document.getElementById('chapters').innerHTML = chapters.map((label, i) => `<li class="${i === current ? 'current' : i < current ? 'done' : ''}" ${i === current ? 'aria-current="step"' : ''}><span class="chapter-number">${i + 1}</span><span class="chapter-label">${label}</span></li>`).join('');
-    const value = engine.STEPS.indexOf(state.step) + (state.step === 'voices' ? state.voiceIndex / 4 : 0);
+    const chapters = ['Kezdőoldal', 'A történet', 'Első döntés', 'A négy hang', 'Második döntés', 'Befolyásoló tényező', 'A történet folytatása', 'Bibliai reflexió és közös tanítás', 'Személyes reflexió és lezárás'];
+    const current = engine.STEPS.indexOf(state.step);
+    document.getElementById('chapters').innerHTML = chapters.map((label, i) => `<li class="${i === current ? 'current' : i < current ? 'done' : ''}" ${i === current ? 'aria-current="step"' : ''} aria-label="${i + 1}. képernyő: ${escape(label)}"><span class="chapter-number">${i + 1}</span><span class="chapter-label">${escape(label)}</span></li>`).join('');
+    const value = state.completed ? 9 : current + (state.step === 'voices' ? state.voiceIndex / content.voices.length : 0);
     const progress = document.getElementById('progress');
     progress.setAttribute('aria-valuenow', String(value));
-    progress.setAttribute('aria-valuetext', `${chapters[current]}${state.step === 'voices' ? ', ' + (state.voiceIndex + 1) + '. hang a négyből' : ''}`);
-    document.getElementById('progress-fill').style.width = `${value * 10}%`;
+    progress.setAttribute('aria-valuetext', `${current + 1}. képernyő a 9-ből: ${chapters[current]}${state.step === 'voices' ? ', ' + (state.voiceIndex + 1) + '. hang a négyből' : ''}${state.completed ? ', lezárva' : ''}`);
+    document.getElementById('progress-fill').style.width = `${value / 9 * 100}%`;
   }
   function updateNotice() {
     const note = document.getElementById('storage-note');
@@ -124,16 +120,25 @@
     state = engine.transition(state, action, content);
     if (state.step !== 'start') recovered = false;
     persist();
-    if (repaint) render();
+    if (repaint) {
+      const finishing = action.type === 'FINISH' && state.completed;
+      render(!finishing);
+      if (finishing) {
+        const feedback = document.getElementById('completion-feedback');
+        feedback.focus({ preventScroll: true });
+        feedback.scrollIntoView({ block: 'nearest' });
+      }
+    }
     else {
-      const advance = main.querySelector('[data-action="next"]');
+      const advance = main.querySelector('[data-action="next"], [data-action="finish"]');
       if (advance) advance.disabled = !canAdvance();
     }
   }
   function render(moveFocus = true) {
-    const screens = { start: renderStart, situation: renderSituation, initial: () => renderDecision(false), voices: renderVoice, final: () => renderDecision(true), influence: renderInfluence, continuation: renderContinuation, biblical: renderBiblical, teaching: renderTeaching, reflection: renderReflection, summary: renderSummary };
+    const screens = { start: renderStart, situation: renderSituation, initial: () => renderDecision(false), voices: renderVoice, final: () => renderDecision(true), influence: renderInfluence, continuation: renderContinuation, biblical: renderBiblical, reflection: renderReflection };
     main.innerHTML = screens[state.step]();
     main.dataset.step = state.step;
+    main.dataset.completed = String(state.completed);
     document.querySelectorAll('[data-app-version]').forEach(label => {
       label.textContent = versionLabel;
       label.hidden = !versionLabel;
@@ -141,8 +146,6 @@
     });
     const takeaway = document.getElementById('takeaway');
     if (takeaway) takeaway.value = state.takeaway;
-    const summary = document.getElementById('takeaway-summary');
-    if (summary) summary.textContent = state.takeaway.trim() || 'Most nem írtál külön gondolatot.';
     document.querySelector('.restart-button').hidden = state.step === 'start';
     updateProgress();
     updateNotice();
@@ -174,6 +177,15 @@
     }
     else if (action === 'start') dispatch({ type: 'START' });
     else if (action === 'next') dispatch({ type: 'NEXT' });
+    else if (action === 'finish') dispatch({ type: 'FINISH' });
+    else if (action === 'toggle-explanation') {
+      const panel = document.getElementById(control.getAttribute('aria-controls'));
+      if (!panel) return;
+      const opening = control.getAttribute('aria-expanded') !== 'true';
+      panel.hidden = !opening;
+      control.setAttribute('aria-expanded', String(opening));
+      control.textContent = opening ? 'Kevesebb' : 'Bővebben';
+    }
   });
   document.addEventListener('change', event => {
     const type = { initial: 'SELECT_INITIAL', final: 'SELECT_FINAL', influence: 'SELECT_INFLUENCE', reflection: 'SELECT_REFLECTION' }[event.target.name];

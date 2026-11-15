@@ -6,5 +6,5 @@
   else root.NegyHangVersion = metadata;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
-  return Object.freeze({ version: "0.2.2" });
+  return Object.freeze({ version: "0.3.0" });
 });

@@ -148,11 +148,12 @@ strong { font-weight: 750; }
   max-width: 1106px;
   padding: 0.85rem 1.75rem;
   margin-inline: auto;
-  display: flex;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 0.5rem;
   list-style: none;
 }
-.chapter-nav li { flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 0.5rem; color: #A9BBC5; }
+.chapter-nav li { min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; color: #A9BBC5; text-align: center; }
 .chapter-number {
   width: 26px;
   height: 26px;
@@ -164,7 +165,7 @@ strong { font-weight: 750; }
   font-size: 0.72rem;
   font-weight: 700;
 }
-.chapter-label { font-size: 0.72rem; line-height: 1.35; overflow-wrap: anywhere; }
+.chapter-label { font-size: 0.68rem; line-height: 1.35; overflow-wrap: anywhere; }
 .chapter-nav li.current { color: #FFFFFF; font-weight: 750; }
 .chapter-nav li.current .chapter-number { border-color: var(--turquoise); background: var(--turquoise); color: var(--navy); }
 .chapter-nav li.done { color: #DAE6EC; }
@@ -301,7 +302,7 @@ input[type='radio'] { width: 20px; height: 20px; margin: 0.45rem 0 0; accent-col
 .voice-kicker { margin-bottom: 0.4rem; color: #425564; font-size: 0.72rem; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase; }
 .voice-title { font-size: 1.8rem; color: var(--voice-color); }
 .voice-description { margin-top: 0.3rem; color: #4D606D; font-size: 0.88rem; }
-.voice-speech { margin-top: 1.4rem; color: var(--text); font-size: 1.1rem; line-height: 1.85; }
+.voice-speech { margin-top: 1.4rem; color: var(--text); font-size: 1.1rem; line-height: 1.85; white-space: pre-line; }
 .voice-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); list-style: none; gap: 0.7rem; padding: 0; margin: 0 0 1.4rem; }
 .voice-steps li { min-width: 0; display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.6rem 0.75rem; border: 1px solid #CCD7DE; border-radius: 9px; background: #F0F3F5; color: #526572; font-size: 0.78rem; font-weight: 650; text-align: center; overflow-wrap: anywhere; }
 .voice-steps .voice-mini-icon { width: 28px; height: 28px; padding: 5px; flex: 0 0 28px; border-radius: 8px; }
@@ -321,6 +322,12 @@ input[type='radio'] { width: 20px; height: 20px; margin: 0.45rem 0 0; accent-col
 .scripture-note { margin-block: 1.25rem; padding: 1.35rem; border: 1px solid #C5DDE6; border-radius: 13px; background: #EEF7FA; color: #253F4C; }
 .scripture-note h2, .scripture-note h3, .scripture-reference { margin-bottom: 0.6rem; font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; color: #185B70; }
 .scripture-note p { font-size: 0.95rem; }
+.bible-quote { margin-bottom: 1.1rem; font-size: 1rem; line-height: 1.8; font-weight: 600; }
+.explanation-toggle { margin-top: 1.2rem; }
+.expanded-explanation { margin-top: 1.25rem; padding-top: 1.1rem; border-top: 1px solid #C5DDE6; }
+.common-teaching { margin-top: 1.25rem; }
+.common-subtitle { margin-block: 1rem; font-size: 1.05rem; }
+.completion-feedback { margin-top: 1.4rem; padding: 1rem 1.15rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-muted); color: var(--text); }
 .highlight-quote { margin-block: 1.25rem; padding: 1.1rem 1.3rem; border-left: 4px solid #238597; border-radius: 0 11px 11px 0; background: #F0F8F9; font-family: var(--font-heading); color: #143E4B; font-size: 1.1rem; line-height: 1.7; font-weight: 600; }
 .teaching-panel > p { line-height: 1.8; }
 .summary-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem 1.5rem; margin-top: 1rem; }

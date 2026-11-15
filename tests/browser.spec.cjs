@@ -4,8 +4,9 @@ const KEY = require('../js/state.js').STORAGE_KEY;
 const versionLabel = 'v' + require('../package.json').version;
 const active = page => page.locator('#main-content');
 const next = page => page.locator('[data-action="next"]');
+const finish = page => page.locator('[data-action="finish"]');
 const value = page => page.evaluate(key => JSON.parse(sessionStorage.getItem(key)), KEY);
-async function phase(page, name) { await expect(active(page)).toHaveAttribute('data-step', name); }
+async function phase(page, name) { await expect(active(page)).toHaveAttribute('data-step', name); await expect(page.locator('#chapters li')).toHaveCount(9); }
 const endingImages = { A: 'wallet-ending-return-full', B: 'wallet-ending-keep-money', C: 'wallet-ending-return-documents', D: 'wallet-ending-walk-away' };
 async function scene(page, id, imagesAvailable = true) {
   const frame = active(page).locator(`[data-illustration="${id}"]`);
@@ -23,6 +24,7 @@ async function scene(page, id, imagesAvailable = true) {
 }
 async function initial(page, letter, imagesAvailable = true) {
   await page.goto('/');
+  await phase(page, 'start');
   await scene(page, 'hero-four-paths', imagesAvailable);
   await expect(page.locator('[data-app-version]')).toHaveText([versionLabel, versionLabel]);
   await expect(page.locator('.hero [data-app-version]')).toBeVisible();
@@ -36,6 +38,7 @@ async function initial(page, letter, imagesAvailable = true) {
   await scene(page, 'wallet-scene-opening', imagesAvailable);
   await expect(next(page)).toBeDisabled();
   await expect(next(page)).toHaveText('Megnézem a négy nézőpontot');
+  await expect(page.locator('.choice-copy')).toHaveText(content.stories[0].choices.map(c => c.text));
   await expect(page.locator('label[for="initial-D"]')).toContainText('Visszateszem oda, ahol találtam, és továbbmegyek.');
   await page.locator('#initial-' + letter).check();
   await next(page).click();
@@ -52,6 +55,7 @@ async function voices(page, imagesAvailable = true) {
     await next(page).click();
   }
   await phase(page, 'final');
+  await expect(page.locator('.choice-copy')).toHaveText(content.stories[0].choices.map(c => c.text));
   await expect(active(page).locator('[data-illustration]')).toHaveCount(0);
   await expect(page.locator('label[for="final-D"]')).toContainText('Visszateszem oda, ahol találtam, és továbbmegyek.');
 }
@@ -65,32 +69,57 @@ async function ending(page, letter, influence = 'mixed', imagesAvailable = true)
   await next(page).click();
   await phase(page, 'continuation');
   await scene(page, endingImages[letter], imagesAvailable);
-  await expect(page.locator('#screen-title')).toHaveText(content.stories[0].endings[letter].title);
-  if (letter === 'B') {
-    await expect(active(page)).toContainText('ELVESZETT PÉNZTÁRCA');
-    await expect(active(page)).toContainText('A pénzt édesanyám gyógyszereire tettem félre.');
-    await expect(active(page)).toContainText('Eszedbe jut az új fejhallgatód. A pénzt már elköltötted.');
-  }
+  const branch = content.stories[0].endings[letter];
+  await expect(page.locator('#screen-title')).toHaveText(branch.title);
+  for (const paragraph of branch.paragraphs) await expect(page.locator('.story-text')).toContainText(paragraph);
+  if (letter === 'B') await expect(page.locator('.notice-card')).toContainText('A héten kellene kiváltanom őket.');
   await next(page).click();
   await phase(page, 'biblical');
   await expect(active(page).locator('[data-illustration]')).toHaveCount(0);
+  await expect(page.locator('.teaching-text')).toHaveText(branch.teaching);
+  await expect(page.locator('.bible-quote')).toHaveText('„' + branch.scripture.quote + '”');
+  await expect(page.locator('.scripture-reference').first()).toContainText(branch.scripture.reference);
+  await expect(page.locator('.scripture-short p')).toHaveText(branch.scripture.short);
+  await expect(page.locator('.branch-question')).toContainText(branch.question);
+  const common = page.locator('[data-common-teaching]');
+  await expect(common).toBeVisible();
+  await expect(common.locator('.story-text p')).toHaveText(content.commonTeaching.paragraphs);
+  await expect(common.locator('.highlight-quote')).toHaveText('„' + content.commonTeaching.highlight + '”');
+  const toggle = page.locator('[data-action="toggle-explanation"]');
+  await expect(toggle).toHaveAccessibleName('Bővebben');
+  const panel = page.locator('#' + await toggle.getAttribute('aria-controls'));
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  await expect(panel).toBeHidden();
+  const before = await value(page);
+  await toggle.focus(); await page.keyboard.press('Space');
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  await expect(toggle).toHaveText('Kevesebb');
+  await expect(toggle).toBeFocused();
+  await expect(panel).toBeVisible();
+  await expect(panel.locator('p')).toHaveText(branch.scripture.more);
+  await expect(common).toBeVisible();
+  await expect(page.locator('.branch-question')).toBeVisible();
+  await toggle.click();
+  await expect(panel).toBeHidden();
+  await expect(toggle).toHaveText('Bővebben');
+  await phase(page, 'biblical');
+  expect(await value(page)).toEqual(before);
+  for (const [id, other] of Object.entries(content.stories[0].endings)) {
+    if (id !== letter) await expect(active(page)).not.toContainText(other.scripture.short[0]);
+  }
+  for (const marker of ['SZERKESZTŐI MEGJEGYZÉS', 'FEJLESZTÉSI MEGJEGYZÉS', 'MEGVALÓSÍTÁSI MEGJEGYZÉS']) await expect(active(page)).not.toContainText(marker);
 }
 async function reflection(page) {
   await next(page).click();
-  await phase(page, 'teaching');
-  await expect(active(page).locator('[data-illustration]')).toHaveCount(0);
-  await expect(active(page)).toContainText('A lelkiismeret azonban nem tévedhetetlen.');
-  await expect(active(page)).toContainText('Róma 2,15');
-  await expect(page.locator('.highlight-quote')).toHaveText('„de mindent vizsgáljatok meg: a jót tartsátok meg”');
-  await expect(page.locator('.teaching-panel .scripture-reference')).toHaveText('1Thesszalonika 5,21 – RÚF 2014, részlet');
-  await next(page).click();
   await phase(page, 'reflection');
   await expect(active(page).locator('[data-illustration]')).toHaveCount(0);
-  await expect(next(page)).toBeDisabled();
+  await expect(finish(page)).toHaveText('Befejeztem a történetet');
+  await expect(finish(page)).toBeDisabled();
+  await expect(page.locator('.decision-pair')).toHaveCount(1);
 }
 
 for (const [index, letter] of ['A', 'B', 'C', 'D'].entries()) {
-  test('A második döntés szerinti ' + letter + ' befejezés, biztonságos mentés és összesítés', async ({ page }) => {
+  test('A második döntés szerinti ' + letter + ' ág, teljes bibliai rész és helyben lezárás', async ({ page }) => {
     const errors = [], outside = [];
     page.on('pageerror', error => errors.push(error.message));
     page.on('request', request => { if (!request.url().startsWith('http://127.0.0.1:4173')) outside.push(request.url()); });
@@ -98,39 +127,38 @@ for (const [index, letter] of ['A', 'B', 'C', 'D'].entries()) {
     const influence = ['conscience', 'mixed', 'fear', 'others'][index];
     await initial(page, first); await voices(page);
     await expect(page.locator('.previous-choice')).toContainText(content.stories[0].choices.find(c => c.id === first).text);
-    await ending(page, letter, influence);
-    await expect(active(page)).toContainText(content.stories[0].endings[letter].teaching);
-    await expect(active(page)).toContainText(content.stories[0].endings[letter].question);
-    if (letter === 'B') {
-      await expect(active(page)).toContainText('Lukács 19,1–10');
-      await expect(page.locator('.scripture-reference').first()).toHaveText('2Mózes 20,15 – RÚF 2014');
-      await expect(page.locator('.scripture-note h2').first()).toHaveText('„Ne lopj!”');
-    }
-    for (const note of await page.locator('.scripture-note').all()) {
-      await expect(note).toContainText('Magyarázat:');
-    }
-    if (letter === 'D') await expect(active(page)).toContainText('nem azonosítjuk a pénz eltulajdonításával');
-    await reflection(page);
+    await ending(page, letter, influence); await reflection(page);
     const answer = '</textarea><img src=x onerror="window.testInjection=1"> Árvíztűrő tükörfúrógép.\nEzt viszem magammal.';
     await page.locator('#takeaway').fill(answer);
     await page.locator('#reflection-uncertain').check();
-    await page.reload();
-    await phase(page, 'reflection');
+    await page.reload(); await phase(page, 'reflection');
     await expect(page.locator('#takeaway')).toHaveValue(answer);
     await expect(page.locator('#reflection-uncertain')).toBeChecked();
-    await next(page).click(); await phase(page, 'summary');
-    await expect(page.locator('#takeaway-summary')).toHaveText(answer);
+    await expect(finish(page)).toBeEnabled();
+    await finish(page).click();
+    await phase(page, 'reflection');
+    await expect(active(page)).toHaveAttribute('data-completed', 'true');
+    await expect(page.locator('#screen-title')).toHaveText('Nézz vissza a döntésedre!');
+    await expect(page.locator('#completion-feedback')).toHaveText('A történet végére értél.');
+    await expect(page.locator('#completion-feedback')).toBeFocused();
+    await expect(page.locator('#takeaway')).toHaveValue(answer);
+    await expect(page.locator('#takeaway')).toHaveAttribute('readonly', '');
+    await expect(page.locator('#reflection-uncertain')).toBeDisabled();
     await expect(page.locator('main img')).toHaveCount(0);
+    await expect(page.locator('.decision-pair')).toHaveCount(1);
+    await expect(page.locator('#progress')).toHaveAttribute('aria-valuenow', '9');
     expect(await page.evaluate(() => window.testInjection)).toBeUndefined();
     const state = await value(page);
     expect(state.initialChoice).toBe(first); expect(state.finalChoice).toBe(letter); expect(state.influence).toBe(influence);
-    await page.reload(); await phase(page, 'summary');
-    await expect(page.locator('#takeaway-summary')).toHaveText(answer);
-    await expect(page.locator('.reflection-answer')).toContainText('Nem tudom biztosan. Elgondolkodtatott.');
-    await expect(page.locator('.summary-note')).toHaveText('Az első történet végére értél.');
+    expect(state.completed).toBe(true); expect(state.step).toBe('reflection');
+    await page.reload(); await phase(page, 'reflection');
+    await expect(page.locator('#completion-feedback')).toHaveText('A történet végére értél.');
+    await expect(page.locator('#takeaway')).toHaveValue(answer);
+    await expect(page.locator('#reflection-uncertain')).toBeChecked();
     await expect(active(page).getByRole('button')).toHaveCount(1);
     await expect(active(page).getByRole('button', { name: 'Újrajátszom a történetet' })).toBeVisible();
-    await expect(active(page).locator('[data-action="edit-reflection"], [download]')).toHaveCount(0);
+    await expect(active(page).locator('[data-action="finish"], [download]')).toHaveCount(0);
+    await expect(page.locator('#takeaway-summary')).toHaveCount(0);
     await expect(page.locator('.decision-box').first()).toContainText(content.stories[0].choices.find(c => c.id === first).text);
     await expect(page.locator('.decision-box').last()).toContainText(content.stories[0].choices.find(c => c.id === letter).text);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
@@ -140,11 +168,11 @@ for (const [index, letter] of ['A', 'B', 'C', 'D'].entries()) {
 
 test('A változatlan döntés megőrzése, újrakezdés és megszakítás', async ({ page }) => {
   await initial(page, 'A'); await voices(page); await ending(page, 'A', 'desire'); await reflection(page);
-  await page.locator('#reflection-same').check(); await next(page).click();
+  await page.locator('#reflection-same').check(); await finish(page).click();
   await expect(page.locator('.summary-list')).toContainText('Nem.');
   await page.evaluate(() => sessionStorage.setItem('other_project_marker', 'preserve'));
   await page.locator('.restart-button').click();
-  await page.getByRole('button', { name: 'Még folytatom' }).click(); await phase(page, 'summary');
+  await page.getByRole('button', { name: 'Még folytatom' }).click(); await phase(page, 'reflection');
   await page.locator('.restart-button').click();
   await page.getByRole('button', { name: 'Újrakezdem', exact: true }).click();
   await phase(page, 'start');
@@ -222,9 +250,10 @@ for (const [index, letter] of ['A', 'B', 'C', 'D'].entries()) {
     await reflection(page);
     await page.locator('#reflection-uncertain').check();
     await page.locator('#takeaway').fill('Képek nélkül is megmarad a saját gondolatom.');
-    await next(page).click();
-    await phase(page, 'summary');
-    await expect(page.locator('#takeaway-summary')).toHaveText('Képek nélkül is megmarad a saját gondolatom.');
+    await finish(page).click();
+    await phase(page, 'reflection');
+    await expect(page.locator('#takeaway')).toHaveValue('Képek nélkül is megmarad a saját gondolatom.');
+    await expect(page.locator('#completion-feedback')).toHaveText('A történet végére értél.');
     const state = await value(page);
     expect(state.initialChoice).toBe(first);
     expect(state.finalChoice).toBe(letter);
@@ -233,3 +262,26 @@ for (const [index, letter] of ['A', 'B', 'C', 'D'].entries()) {
     expect(errors).toEqual([]);
   });
 }
+
+
+test('A v0.2.2 mentései a kilencszakaszos felületen veszteség nélkül folytathatók', async ({ page }) => {
+  await page.goto('/');
+  const base = { version: 1, storyId: 'wallet', voiceIndex: 3, initialChoice: 'B', finalChoice: 'D', influence: 'mixed', reflection: null, takeaway: '' };
+  await page.evaluate(({ key, state }) => sessionStorage.setItem(key, JSON.stringify(state)), { key: KEY, state: { ...base, step: 'teaching' } });
+  await page.reload(); await phase(page, 'biblical');
+  await expect(page.locator('.scripture-reference').first()).toContainText('Lukács 10,31–32');
+  await expect(page.locator('[data-common-teaching]')).toBeVisible();
+  await next(page).click(); await phase(page, 'reflection');
+  const saved = { ...base, step: 'summary', reflection: 'different', takeaway: 'Megőrzött korábbi gondolat.' };
+  await page.evaluate(({ key, state }) => sessionStorage.setItem(key, JSON.stringify(state)), { key: KEY, state: saved });
+  await page.reload(); await phase(page, 'reflection');
+  await expect(page.locator('#completion-feedback')).toHaveText('A történet végére értél.');
+  await expect(page.locator('#takeaway')).toHaveValue(saved.takeaway);
+  await expect(page.locator('#reflection-different')).toBeChecked();
+  expect(await value(page)).toMatchObject({ version: 2, step: 'reflection', completed: true, initialChoice: 'B', finalChoice: 'D', takeaway: saved.takeaway });
+  await page.evaluate(({ key, state }) => sessionStorage.setItem(key, JSON.stringify(state)), { key: KEY, state: { ...saved, step: 'reflection' } });
+  await page.reload(); await phase(page, 'reflection');
+  await expect(page.locator('#takeaway')).toHaveValue(saved.takeaway);
+  await expect(finish(page)).toBeEnabled();
+  await expect(page.locator('#completion-feedback')).toHaveCount(0);
+});
