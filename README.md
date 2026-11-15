@@ -41,19 +41,19 @@ Az npm `version` életciklus-parancsa automatikusan létrehozza a böngésző á
 
 A GitHub Pages a `main` ág gyökerében lévő, commitolt fájlokat publikálja. Az új verziójelzés a megfelelő commit sikeres Pages-közzététele után jelenik meg; pusztán egy helyi verziófrissítés még nem módosítja az élő oldalt. Commitazonosító szándékosan nem szerepel a felületen: a jelenlegi, ágból történő statikus közzététel mellett egy kézzel beírt hash nem igazolná megbízhatóan a ténylegesen kiszolgált kiadást. Ehhez később ellenőrzött kiadási metaadatot előállító publikálási folyamat szükséges.
 
-## A kilenc fő képernyő – v0.3.0
+## A hét fő képernyő – v0.3.1
 
 A jóváhagyott tartalmi alap a [lektorált Word-szövegkönyv](docs/ANegyHang_9_kepernyos_lektoralt_szovegkonyv.docx). A dokumentum változatlanul megmarad a `docs` mappában; a szerkesztői és fejlesztési megjegyzései megvalósítási utasítások, nem tanulói szövegek.
+
+A `v0.3.1` jóváhagyott szerkezeti módosítása felülírja a szövegkönyv korábbi 6. és 9. képernyőjének használatát. A külön befolyásoló kérdés kimarad, a személyes reflexiót pedig a későbbi, hat történet utáni közös lezáráshoz tartjuk fenn. Ez a közös reflexió és döntéstérkép még nincs megvalósítva. A történetszövegek, döntési lehetőségek, négy hang és bibliai magyarázatok változatlanok.
 
 1. Kezdőoldal.
 2. A történet.
 3. Első döntés.
 4. A négy hang: négy egymás utáni, külön léptethető nézőpont, egyetlen fő szakaszon belül.
 5. Második döntés, az elsővel azonos válaszlehetőségekkel és az első választás megmutatásával.
-6. Befolyásoló tényező.
-7. A végső döntéshez tartozó négy történetfolytatás egyike.
-8. A választott ág bibliai reflexiója és a közös 8/K tanítás ugyanazon az oldalon. A rövid magyarázat látható; a teljes további magyarázat akadálymentes **Bővebben / Kevesebb** gombbal nyitható és csukható. Az igehely, a továbbgondolási kérdés és a közös tanítás mindig látható.
-9. Személyes reflexió és lezárás: a két döntés, a változtatás és a befolyásoló tényező egyszer szerepel; ezután a három reflexiós lehetőség és az opcionális szövegmező következik. A **Befejeztem a történetet** menti és lezárja a választást, majd ugyanitt jelenik meg: **A történet végére értél.** Nincs külön összegző képernyő. A lezárt válaszok olvashatók, az újrajátszás továbbra is elérhető.
+6. A végső döntéshez tartozó négy történetfolytatás egyike, közvetlenül a második döntés megerősítése után.
+7. A választott ág bibliai reflexiója és a közös 8/K tanítás ugyanazon az oldalon. A rövid magyarázat látható; a teljes további magyarázat akadálymentes **Bővebben / Kevesebb** gombbal nyitható és csukható. Az igehely, a továbbgondolási kérdés és a közös tanítás mindig látható. A 8/K után a **Befejeztem a történetet** gomb elmenti a lezárás állapotát, majd ugyanitt jelenik meg: **Az első történet végére értél.** Ezután elérhető az **Újrajátszom a történetet** gomb. Nincs újabb kérdéssor, szövegmező, döntés-összehasonlítás vagy külön összegző képernyő.
 
 Nincs erkölcsi pontszám, rangsor vagy a döntés megváltoztatásáért járó jutalom. A négy hang azonos súlyú vizuális karaktert kap. A pénztárca otthagyását nem azonosítja az alkalmazás a pénz eltulajdonításával. A lelkiismeretet nem tekinti automatikusan Isten közvetlen, tévedhetetlen hangjának.
 
@@ -61,9 +61,11 @@ Nincs erkölcsi pontszám, rangsor vagy a döntés megváltoztatásáért járó
 
 A haladás csak a saját böngészőlap `sessionStorage` tárolójába kerül, az `a_negy_hang_session_v1` kulcs alá. Frissítés után folytatható, a munkamenet a lap bezárásához kötődik. Nem kér nevet, e-mailt vagy regisztrációt, nem hoz létre tanulói azonosítót, és nem küld választ külső szolgáltatáshoz. Nincs analitika vagy távoli API.
 
-A tárolás tiltása vagy betelt tárhely esetén a játék memóriában tovább használható, az újratöltéssel kapcsolatos korlátot jelzi. Sérült mentésnél biztonságosan új munkamenetet indít. A szabad szöveg szövegként, a mező `value` tulajdonságán keresztül kerül a felületre, nem HTML-ként. Újrakezdéskor csak a saját játékállapota törlődik, más alkalmazások tárolókulcsaihoz nem nyúl.
+A tárolás tiltása vagy betelt tárhely esetén a játék memóriában tovább használható, az újratöltéssel kapcsolatos korlátot jelzi. Sérült mentésnél biztonságosan új munkamenetet indít. Újrakezdéskor csak a saját játékállapota törlődik, más alkalmazások tárolókulcsaihoz nem nyúl.
 
-A mentési séma a `v0.3.0` kiadásban 2-es változatra frissül, a tárolókulcs megváltoztatása nélkül. Az érvényes korábbi mentések döntései és reflexiói megmaradnak: a régi közös tanítás a 8. oldalra kerül, a korábbi végső összegzés pedig lezárt 9. oldalként áll helyre. A lezárásig a reflexió szerkeszthető, utána a lezárási jelzés és a mentett válasz ugyanazon az oldalon marad.
+A mentési séma a `v0.3.1` kiadásban 3-as változatra frissül, a tárolókulcs megváltoztatása nélkül. A helyi állapot tartalmazza a séma verzióját, a történet azonosítóját, az aktuális szakaszt és hangot, az első és második döntést, azok különbözőségét (`decisionChanged`), valamint a lezárás állapotát. A különbözőség a második döntés kiválasztásáig `null`, utána a két döntés összehasonlításának logikai értéke. A befejezett játékmenet az újrajátszásig lezárt marad.
+
+Az érvényes korábbi, 1-es és 2-es sémájú mentéseket ellenőrzés után átvesszük. A megszüntetett befolyásoló képernyőről közvetlenül a történetfolytatáshoz, a régi közös tanításról, személyes reflexióról és összegzésről a 7. képernyőhöz kerül a játékos. A két döntés és a befejezés állapota megmarad; a régi végső összegzés lezárt történetként áll helyre. A megszüntetett befolyásoló választást, háromválaszos reflexiót és szabad szöveget az új séma már nem tárolja és nem kéri be újra.
 
 A közös eszközt a következő tanuló előtt az **Újrakezdés** művelettel lehet alapállapotba hozni. A böngésző saját lap-helyreállítási funkciója egy korábban bezárt munkamenetet is visszaállíthat.
 
@@ -96,7 +98,7 @@ npm run test:browser
 
 A felhőkörnyezetben a konfiguráció felismeri a meglévő `/usr/bin/chromium` böngészőt; ott a külön böngészőtelepítés kihagyható. Másik Chromium a `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` változóval választható.
 
-Az állapotteszt 240 teljes utat ellenőriz (16 első/második döntéspár × 5 befolyás × 3 reflexió), továbbá a kötelező választásokat, a négy hang sorrendjét, a helyben történő lezárást, az írásvédett lezárt állapotot, a régi mentések migrációját és az újrakezdést. A forráshűségteszt közvetlenül az eredeti DOCX bekezdéseivel hasonlítja össze a történetet, a hangokat és valamennyi rövid/teljes bibliai magyarázatot. Ehhez a Python 3 beépített ZIP/XML-kezelője elég, külön csomag nem kell. A Playwright asztali és mobilméreten vizsgálja mind a négy ágat, a lenyitást és csukást, a közös tanítást, a 9. oldalon maradó lezárást, az újratöltést, a biztonságos szövegkezelést, a billentyűzetet és a képhibák melletti végigjátszást.
+Az állapotteszt 16 teljes utat ellenőriz (4 első döntés × 4 második döntés), továbbá a kötelező választásokat, a négy hang sorrendjét, a második döntés utáni közvetlen történetfolytatást, a helyben történő lezárást, a lezárt állapot védelmét, a régi mentések migrációját és az újrakezdést. A forráshűségteszt közvetlenül az eredeti DOCX bekezdéseivel hasonlítja össze a történetet, a hangokat és valamennyi rövid/teljes bibliai magyarázatot. Ehhez a Python 3 beépített ZIP/XML-kezelője elég, külön csomag nem kell. A Playwright asztali és mobilméreten vizsgálja mind a négy ágat, a hétszakaszos navigációt, a lenyitást és csukást, a közös tanítást, a 7. oldalon maradó lezárást, az újratöltést, a billentyűzetet és a képhibák melletti végigjátszást.
 
 ## Arculati és tartalmi alap
 
@@ -121,7 +123,7 @@ Az aktív eredeti PNG-ket a `design/illustrations/sources/` mappa, a jelenetek l
 ## Későbbi fejlesztés
 
 - A további öt történet tartalmi kidolgozása és ellenőrzése.
-- A történetválasztás és a hat történetet összekapcsoló döntési térkép.
+- A történetválasztás, valamint a hatodik történet utáni közös személyes reflexió és döntési térkép.
 - Valós tanulói/tanári próba, további böngészők és segítő technológiák vizsgálata.
 
 Az állapotgép történetazonosítóval dolgozik. Egy következő történet a `stories` tömb azonos sémájú elemével, négy befejezéssel és a hozzá tartozó tesztekkel bővíthető; a történetválasztó és a közös térkép külön későbbi feladat. Jelenleg kizárólag a pénztárcás történet szerepel a játékban.

@@ -6,7 +6,7 @@ const active = page => page.locator('#main-content');
 const next = page => page.locator('[data-action="next"]');
 const finish = page => page.locator('[data-action="finish"]');
 const value = page => page.evaluate(key => JSON.parse(sessionStorage.getItem(key)), KEY);
-async function phase(page, name) { await expect(active(page)).toHaveAttribute('data-step', name); await expect(page.locator('#chapters li')).toHaveCount(9); }
+async function phase(page, name) { await expect(active(page)).toHaveAttribute('data-step', name); await expect(page.locator('#chapters li')).toHaveCount(7); await expect(page.locator('#progress')).toHaveAttribute('aria-valuemax', '7'); }
 const endingImages = { A: 'wallet-ending-return-full', B: 'wallet-ending-keep-money', C: 'wallet-ending-return-documents', D: 'wallet-ending-walk-away' };
 async function scene(page, id, imagesAvailable = true) {
   const frame = active(page).locator(`[data-illustration="${id}"]`);
@@ -59,13 +59,9 @@ async function voices(page, imagesAvailable = true) {
   await expect(active(page).locator('[data-illustration]')).toHaveCount(0);
   await expect(page.locator('label[for="final-D"]')).toContainText('Visszateszem oda, ahol találtam, és továbbmegyek.');
 }
-async function ending(page, letter, influence = 'mixed', imagesAvailable = true) {
+async function ending(page, letter, imagesAvailable = true) {
   await expect(next(page)).toBeDisabled();
   await page.locator('#final-' + letter).check();
-  await next(page).click();
-  await phase(page, 'influence');
-  await expect(next(page)).toBeDisabled();
-  await page.locator('#influence-' + influence).check();
   await next(page).click();
   await phase(page, 'continuation');
   await scene(page, endingImages[letter], imagesAvailable);
@@ -109,76 +105,75 @@ async function ending(page, letter, influence = 'mixed', imagesAvailable = true)
   }
   for (const marker of ['SZERKESZTŐI MEGJEGYZÉS', 'FEJLESZTÉSI MEGJEGYZÉS', 'MEGVALÓSÍTÁSI MEGJEGYZÉS']) await expect(active(page)).not.toContainText(marker);
 }
-async function reflection(page) {
-  await next(page).click();
-  await phase(page, 'reflection');
-  await expect(active(page).locator('[data-illustration]')).toHaveCount(0);
+async function noClosingQuestions(page) {
+  await expect(active(page).locator('input, textarea, .decision-pair, .summary-list')).toHaveCount(0);
+  await expect(active(page).locator('[data-action="next"]')).toHaveCount(0);
+  for (const removed of ['Melyik hang befolyásolt leginkább?', 'Összegzés megtekintése', content.reflectionQuestion, content.takeawayQuestion]) {
+    await expect(active(page)).not.toContainText(removed);
+  }
+}
+async function complete(page) {
+  await phase(page, 'biblical');
+  await noClosingQuestions(page);
   await expect(finish(page)).toHaveText('Befejeztem a történetet');
-  await expect(finish(page)).toBeDisabled();
-  await expect(page.locator('.decision-pair')).toHaveCount(1);
+  await expect(finish(page)).toBeEnabled();
+  await finish(page).click();
+  await phase(page, 'biblical');
+  await expect(active(page)).toHaveAttribute('data-completed', 'true');
+  await expect(page.locator('#screen-title')).toHaveText('A döntés a Biblia fényében');
+  await expect(page.locator('#completion-feedback')).toHaveText('Az első történet végére értél.');
+  await expect(page.locator('#completion-feedback')).toBeFocused();
+  await expect(page.locator('#progress')).toHaveAttribute('aria-valuenow', '7');
+  await expect(finish(page)).toHaveCount(0);
+  await expect(active(page).getByRole('button', { name: 'Újrajátszom a történetet' })).toBeVisible();
+  await noClosingQuestions(page);
 }
 
 for (const [index, letter] of ['A', 'B', 'C', 'D'].entries()) {
-  test('A második döntés szerinti ' + letter + ' ág, teljes bibliai rész és helyben lezárás', async ({ page }) => {
+  test('A második döntés után közvetlenül a ' + letter + ' ág és a hetedik oldali lezárás', async ({ page }) => {
     const errors = [], outside = [];
     page.on('pageerror', error => errors.push(error.message));
     page.on('request', request => { if (!request.url().startsWith('http://127.0.0.1:4173')) outside.push(request.url()); });
     const first = ['B', 'A', 'D', 'C'][index];
-    const influence = ['conscience', 'mixed', 'fear', 'others'][index];
     await initial(page, first); await voices(page);
     await expect(page.locator('.previous-choice')).toContainText(content.stories[0].choices.find(c => c.id === first).text);
-    await ending(page, letter, influence); await reflection(page);
-    const answer = '</textarea><img src=x onerror="window.testInjection=1"> Árvíztűrő tükörfúrógép.\nEzt viszem magammal.';
-    await page.locator('#takeaway').fill(answer);
-    await page.locator('#reflection-uncertain').check();
-    await page.reload(); await phase(page, 'reflection');
-    await expect(page.locator('#takeaway')).toHaveValue(answer);
-    await expect(page.locator('#reflection-uncertain')).toBeChecked();
+    await ending(page, letter);
+    await expect(page.locator('#chapters li').last()).toHaveAttribute('aria-current', 'step');
+    await noClosingQuestions(page);
+    await page.reload(); await phase(page, 'biblical');
+    await expect(active(page)).toHaveAttribute('data-completed', 'false');
     await expect(finish(page)).toBeEnabled();
-    await finish(page).click();
-    await phase(page, 'reflection');
-    await expect(active(page)).toHaveAttribute('data-completed', 'true');
-    await expect(page.locator('#screen-title')).toHaveText('Nézz vissza a döntésedre!');
-    await expect(page.locator('#completion-feedback')).toHaveText('A történet végére értél.');
-    await expect(page.locator('#completion-feedback')).toBeFocused();
-    await expect(page.locator('#takeaway')).toHaveValue(answer);
-    await expect(page.locator('#takeaway')).toHaveAttribute('readonly', '');
-    await expect(page.locator('#reflection-uncertain')).toBeDisabled();
-    await expect(page.locator('main img')).toHaveCount(0);
-    await expect(page.locator('.decision-pair')).toHaveCount(1);
-    await expect(page.locator('#progress')).toHaveAttribute('aria-valuenow', '9');
-    expect(await page.evaluate(() => window.testInjection)).toBeUndefined();
+    await expect(page.locator('#completion-feedback')).toHaveCount(0);
+    await complete(page);
     const state = await value(page);
-    expect(state.initialChoice).toBe(first); expect(state.finalChoice).toBe(letter); expect(state.influence).toBe(influence);
-    expect(state.completed).toBe(true); expect(state.step).toBe('reflection');
-    await page.reload(); await phase(page, 'reflection');
-    await expect(page.locator('#completion-feedback')).toHaveText('A történet végére értél.');
-    await expect(page.locator('#takeaway')).toHaveValue(answer);
-    await expect(page.locator('#reflection-uncertain')).toBeChecked();
-    await expect(active(page).getByRole('button')).toHaveCount(1);
+    expect(state).toEqual({ version: 3, storyId: 'wallet', step: 'biblical', voiceIndex: 3,
+      initialChoice: first, finalChoice: letter, decisionChanged: true, completed: true });
+    await page.reload(); await phase(page, 'biblical');
+    await expect(page.locator('#completion-feedback')).toHaveText('Az első történet végére értél.');
+    await expect(page.locator('[data-common-teaching]')).toBeVisible();
+    await expect(page.locator('.bible-quote')).toHaveText('„' + content.stories[0].endings[letter].scripture.quote + '”');
     await expect(active(page).getByRole('button', { name: 'Újrajátszom a történetet' })).toBeVisible();
     await expect(active(page).locator('[data-action="finish"], [download]')).toHaveCount(0);
-    await expect(page.locator('#takeaway-summary')).toHaveCount(0);
-    await expect(page.locator('.decision-box').first()).toContainText(content.stories[0].choices.find(c => c.id === first).text);
-    await expect(page.locator('.decision-box').last()).toContainText(content.stories[0].choices.find(c => c.id === letter).text);
+    await noClosingQuestions(page);
+    expect(await value(page)).toEqual(state);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
     expect(errors).toEqual([]); expect(outside).toEqual([]);
   });
 }
 
-test('A változatlan döntés megőrzése, újrakezdés és megszakítás', async ({ page }) => {
-  await initial(page, 'A'); await voices(page); await ending(page, 'A', 'desire'); await reflection(page);
-  await page.locator('#reflection-same').check(); await finish(page).click();
-  await expect(page.locator('.summary-list')).toContainText('Nem.');
+test('A változatlan döntés megőrzése, újrajátszás és megszakítás', async ({ page }) => {
+  await initial(page, 'A'); await voices(page); await ending(page, 'A'); await complete(page);
+  expect((await value(page)).decisionChanged).toBe(false);
   await page.evaluate(() => sessionStorage.setItem('other_project_marker', 'preserve'));
-  await page.locator('.restart-button').click();
-  await page.getByRole('button', { name: 'Még folytatom' }).click(); await phase(page, 'reflection');
-  await page.locator('.restart-button').click();
+  await active(page).getByRole('button', { name: 'Újrajátszom a történetet' }).click();
+  await page.getByRole('button', { name: 'Még folytatom' }).click(); await phase(page, 'biblical');
+  expect((await value(page)).completed).toBe(true);
+  await active(page).getByRole('button', { name: 'Újrajátszom a történetet' }).click();
   await page.getByRole('button', { name: 'Újrakezdem', exact: true }).click();
   await phase(page, 'start');
   await expect(page.locator('[data-app-version]')).toHaveText([versionLabel, versionLabel]);
-  const state = await value(page);
-  expect(state.initialChoice).toBeNull(); expect(state.finalChoice).toBeNull(); expect(state.reflection).toBeNull(); expect(state.takeaway).toBe('');
+  expect(await value(page)).toEqual({ version: 3, storyId: 'wallet', step: 'start', voiceIndex: 0,
+    initialChoice: null, finalChoice: null, decisionChanged: null, completed: false });
   expect(await page.evaluate(() => sessionStorage.getItem('other_project_marker'))).toBe('preserve');
   await page.getByRole('button', { name: 'Kezdjük a történetet' }).click();
   await next(page).click(); await page.locator('#initial-B').check();
@@ -239,49 +234,61 @@ test('WebP-betöltési hiba esetén a helyi PNG is használható', async ({ page
 });
 
 for (const [index, letter] of ['A', 'B', 'C', 'D'].entries()) {
-  test('Képek nélkül is végigjátszható a ' + letter + ' befejezés és a reflexió', async ({ page }) => {
+  test('Képek nélkül is végigjátszható és lezárható a ' + letter + ' ág', async ({ page }) => {
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.route('**/assets/illustrations/*', route => route.abort());
     const first = ['B', 'A', 'D', 'C'][index];
     await initial(page, first, false);
     await voices(page, false);
-    await ending(page, letter, 'mixed', false);
-    await reflection(page);
-    await page.locator('#reflection-uncertain').check();
-    await page.locator('#takeaway').fill('Képek nélkül is megmarad a saját gondolatom.');
-    await finish(page).click();
-    await phase(page, 'reflection');
-    await expect(page.locator('#takeaway')).toHaveValue('Képek nélkül is megmarad a saját gondolatom.');
-    await expect(page.locator('#completion-feedback')).toHaveText('A történet végére értél.');
-    const state = await value(page);
-    expect(state.initialChoice).toBe(first);
-    expect(state.finalChoice).toBe(letter);
-    expect(state.reflection).toBe('uncertain');
+    await ending(page, letter, false);
+    await complete(page);
+    expect(await value(page)).toMatchObject({ initialChoice: first, finalChoice: letter,
+      decisionChanged: true, completed: true, step: 'biblical' });
     await expect(page.locator('.app-footer [data-app-version]')).toHaveText(versionLabel);
     expect(errors).toEqual([]);
   });
 }
 
+async function restore(page, state, step, completed) {
+  await page.evaluate(({ key, state }) => sessionStorage.setItem(key, JSON.stringify(state)), { key: KEY, state });
+  await page.reload(); await phase(page, step);
+  expect(await value(page)).toEqual({ version: 3, storyId: 'wallet', step, voiceIndex: 3,
+    initialChoice: state.initialChoice, finalChoice: state.finalChoice,
+    decisionChanged: state.initialChoice !== state.finalChoice, completed });
+}
 
-test('A v0.2.2 mentései a kilencszakaszos felületen veszteség nélkül folytathatók', async ({ page }) => {
+test('A megszüntetett v0.3.0 képernyőkről is folytatható a történet', async ({ page }) => {
   await page.goto('/');
-  const base = { version: 1, storyId: 'wallet', voiceIndex: 3, initialChoice: 'B', finalChoice: 'D', influence: 'mixed', reflection: null, takeaway: '' };
-  await page.evaluate(({ key, state }) => sessionStorage.setItem(key, JSON.stringify(state)), { key: KEY, state: { ...base, step: 'teaching' } });
-  await page.reload(); await phase(page, 'biblical');
+  const base = { version: 2, storyId: 'wallet', voiceIndex: 3, initialChoice: 'B', finalChoice: 'D',
+    influence: null, reflection: null, takeaway: '', completed: false };
+  await restore(page, { ...base, step: 'influence' }, 'continuation', false);
+  await expect(page.locator('#screen-title')).toHaveText(content.stories[0].endings.D.title);
+  await next(page).click(); await phase(page, 'biblical');
+  await noClosingQuestions(page); await expect(finish(page)).toBeEnabled();
+  const oldReflection = { ...base, step: 'reflection', influence: 'mixed', reflection: 'different',
+    takeaway: '</textarea><img src=x onerror="window.testInjection=1"> Megőrzött korábbi gondolat.' };
+  await restore(page, oldReflection, 'biblical', false);
+  await expect(page.locator('[data-common-teaching]')).toBeVisible();
+  await expect(page.locator('#completion-feedback')).toHaveCount(0);
+  await expect(finish(page)).toBeEnabled(); await noClosingQuestions(page);
+  await restore(page, { ...oldReflection, completed: true }, 'biblical', true);
+  await expect(page.locator('#completion-feedback')).toHaveText('Az első történet végére értél.');
+  await expect(finish(page)).toHaveCount(0); await noClosingQuestions(page);
+  expect(await page.evaluate(() => window.testInjection)).toBeUndefined();
+});
+
+test('A v0.2.2 közös tanítása és lezárt összegzése a hetedik oldalon áll helyre', async ({ page }) => {
+  await page.goto('/');
+  const base = { version: 1, storyId: 'wallet', voiceIndex: 3, initialChoice: 'B', finalChoice: 'D',
+    influence: 'mixed', reflection: null, takeaway: '' };
+  await restore(page, { ...base, step: 'teaching' }, 'biblical', false);
   await expect(page.locator('.scripture-reference').first()).toContainText('Lukács 10,31–32');
   await expect(page.locator('[data-common-teaching]')).toBeVisible();
-  await next(page).click(); await phase(page, 'reflection');
-  const saved = { ...base, step: 'summary', reflection: 'different', takeaway: 'Megőrzött korábbi gondolat.' };
-  await page.evaluate(({ key, state }) => sessionStorage.setItem(key, JSON.stringify(state)), { key: KEY, state: saved });
-  await page.reload(); await phase(page, 'reflection');
-  await expect(page.locator('#completion-feedback')).toHaveText('A történet végére értél.');
-  await expect(page.locator('#takeaway')).toHaveValue(saved.takeaway);
-  await expect(page.locator('#reflection-different')).toBeChecked();
-  expect(await value(page)).toMatchObject({ version: 2, step: 'reflection', completed: true, initialChoice: 'B', finalChoice: 'D', takeaway: saved.takeaway });
-  await page.evaluate(({ key, state }) => sessionStorage.setItem(key, JSON.stringify(state)), { key: KEY, state: { ...saved, step: 'reflection' } });
-  await page.reload(); await phase(page, 'reflection');
-  await expect(page.locator('#takeaway')).toHaveValue(saved.takeaway);
-  await expect(finish(page)).toBeEnabled();
-  await expect(page.locator('#completion-feedback')).toHaveCount(0);
+  await expect(finish(page)).toBeEnabled(); await noClosingQuestions(page);
+  await restore(page, { ...base, step: 'summary', reflection: 'different', takeaway: 'Korábbi gondolat.' }, 'biblical', true);
+  await expect(page.locator('#completion-feedback')).toHaveText('Az első történet végére értél.');
+  await expect(finish(page)).toHaveCount(0);
+  await expect(active(page).getByRole('button', { name: 'Újrajátszom a történetet' })).toBeVisible();
+  await noClosingQuestions(page);
 });

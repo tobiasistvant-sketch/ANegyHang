@@ -21,7 +21,6 @@
   const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const story = () => content.stories.find(item => item.id === state.storyId);
   const choice = value => story().choices.find(item => item.id === value);
-  const influence = () => content.influences.find(item => item.id === state.influence);
   const tints = { desire: '#F8EEE7', others: '#F4EDF4', fear: '#EEF3F7', conscience: '#EAF5F4', mixed: '#F0F2F3' };
   const paths = {
     flame: '<path d="M13 3c1 5 6 7 6 12a7 7 0 0 1-14 0c0-3 2-5 4-7 0 3 1 4 2 4 2-2 2-5 2-9Z"/>',
@@ -51,13 +50,10 @@
 
 
   function canAdvance() {
-    return state.step === 'initial' ? !!state.initialChoice : state.step === 'final' ? !!state.finalChoice : state.step === 'influence' ? !!state.influence : state.step === 'reflection' ? !!state.reflection && !state.completed : true;
+    return state.step === 'initial' ? !!state.initialChoice : state.step === 'final' ? !!state.finalChoice : !state.completed;
   }
   function choices(name, items, selected) {
     return `<div class="choice-list">${items.map(item => `<label class="choice-card" for="${name}-${item.id}"><input id="${name}-${item.id}" type="radio" name="${name}" value="${item.id}" ${selected === item.id ? 'checked' : ''}><span class="choice-letter" aria-hidden="true">${escape(item.letter || item.id)}</span><span class="choice-copy">${escape(item.text)}</span></label>`).join('')}</div>`;
-  }
-  function decisionPair() {
-    return `<div class="decision-pair"><section class="decision-box"><h2>Első megérzésed</h2><p><strong>${state.initialChoice}</strong> · ${escape(choice(state.initialChoice).text)}</p></section><section class="decision-box"><h2>Átgondolt döntésed</h2><p><strong>${state.finalChoice}</strong> · ${escape(choice(state.finalChoice).text)}</p></section></div><dl class="summary-list"><div><dt>Változtattál?</dt><dd>${state.initialChoice === state.finalChoice ? 'Nem.' : 'Igen.'}</dd></div><div><dt>Ami leginkább hatott rád</dt><dd>${escape(influence().text)}</dd></div></dl>`;
   }
   function renderStart() {
     return `<section class="hero"><div class="hero-copy"><p class="eyebrow">Interaktív döntéstörténet · XI. osztály</p><h1 class="hero-title" id="screen-title" tabindex="-1">A NÉGY HANG</h1><h2 class="hero-subtitle">${escape(content.subtitle)}</h2><p class="lead">Először az első megérzésedre hallgatsz. Aztán négy nézőpontot ismersz meg. A végső döntést te hozod meg.</p><p class="story-label">A megtalált pénztárca</p><div class="actions">${button('Kezdjük a történetet', 'start')}</div><p class="session-note">A haladásod ezen a böngészőlapon újratöltés után is megmarad. A lap bezárásakor a munkamenet véget ér.</p><p class="app-version" data-app-version hidden></p></div><div class="hero-art">${scene('hero-four-paths', 'hero-scene', true)}<div class="voice-roster">${content.voices.map(voice => `<div class="voice-mini" style="${voiceStyle(voice)}"><span class="voice-mini-icon">${icon(voice.icon)}</span><span>${escape(voice.name)}</span></div>`).join('')}</div></div></section><div class="feature-grid"><section class="feature-card">${icon('exchange')}<h2>Két döntés</h2><p>Az első megérzésed és az átgondolt választásod külön is megmarad.</p></section><section class="feature-card">${icon('mixed')}<h2>Négy nézőpont</h2><p>Figyeld meg, mi befolyásol, amikor választanod kell!</p></section><section class="feature-card">${icon('notes')}<h2>Saját felismerés</h2><p>Nincs pontozás. A történet a személyes mérlegelésedet segíti.</p></section></div>`;
@@ -74,12 +70,6 @@
     const voice = content.voices[state.voiceIndex];
     return `${heading('Négy nézőpont', 'Négy nézőpont – mit érdemes mérlegelned?', 'Olvasd végig a négy szempontot, majd gondold át újra a döntésedet.')}<ol class="voice-steps" aria-label="A négy hang sorrendje">${content.voices.map((item, i) => `<li class="${i === state.voiceIndex ? 'active' : i < state.voiceIndex ? 'done' : ''}" ${i === state.voiceIndex ? 'aria-current="step"' : ''} style="${voiceStyle(item)}"><span class="voice-mini-icon">${icon(item.icon)}</span>${escape(item.label)}</li>`).join('')}</ol><div class="voice-context">${scene('wallet-scene-voices', 'voice-backdrop')}<section class="voice-stage" style="${voiceStyle(voice)}"><div class="voice-avatar">${icon(voice.icon)}</div><article class="voice-card"><p class="voice-kicker">${state.voiceIndex + 1} / 4 hang</p><h2 class="voice-title">${escape(voice.name)}</h2><p class="voice-description">${escape(voice.description)}</p><blockquote class="voice-speech">„${escape(voice.speech)}”</blockquote></article></section></div>${state.voiceIndex === content.voices.length - 1 ? `<p class="voice-closing">${escape(content.voicesClosing)}</p>` : ''}<div class="actions">${button(state.voiceIndex === content.voices.length - 1 ? 'Átgondolom a döntésemet' : 'Következő hang')}</div>`;
   }
-  function renderInfluence() {
-    return `${heading('A döntésed mögött', content.influenceQuestion, 'Válaszd azt, ami legjobban leírja a saját mérlegelésedet!')}<section class="panel"><fieldset class="choice-fieldset"><legend class="sr-only">${escape(content.influenceQuestion)}</legend><div class="influence-list">${content.influences.map(item => {
-      const voice = content.voices.find(v => v.id === item.id) || { id: 'mixed', color: '#5A6E7B', icon: 'mixed' };
-      return `<label class="influence-card" for="influence-${item.id}" style="${voiceStyle(voice)}"><input id="influence-${item.id}" type="radio" name="influence" value="${item.id}" ${state.influence === item.id ? 'checked' : ''}><span class="voice-mini-icon">${icon(voice.icon)}</span><span>${escape(item.text)}</span></label>`;
-    }).join('')}</div></fieldset><div class="actions">${button('Nézzük, hogyan folytatódik!', 'next', !canAdvance())}</div></section>`;
-  }
   function renderContinuation() {
     const ending = engine.getEnding(state, content);
     const prose = state.storyId === 'wallet' && state.finalChoice === 'B'
@@ -90,22 +80,20 @@
   function renderBiblical() {
     const ending = engine.getEnding(state, content);
     const teaching = content.commonTeaching;
-    return `${heading('Bibliai reflexió', 'A döntés a Biblia fényében')}<section class="reflection-panel"><h2 class="panel-title">Mit mutat meg ez a választás?</h2><p class="teaching-text">${escape(ending.teaching)}</p></section>${branchScripture(ending.scripture)}<section class="panel branch-question"><p class="eyebrow">Gondold tovább!</p><p>${escape(ending.question)}</p></section><section class="teaching-panel common-teaching" data-common-teaching><h2>${escape(teaching.title)}</h2><h3 class="common-subtitle">${escape(teaching.subtitle)}</h3><div class="story-text">${paragraphs(teaching.paragraphs)}</div><blockquote class="highlight-quote">„${escape(teaching.highlight)}”</blockquote><p class="scripture-reference">${escape(teaching.highlightReference)}</p></section><div class="actions">${button('A saját gondolataim')}</div>`;
-  }
-  function renderReflection() {
-    const completed = state.completed;
-    return `${heading('A saját felismerésed', 'Nézz vissza a döntésedre!')}<section class="summary-card">${decisionPair()}</section><section class="panel"><fieldset class="choice-fieldset" ${completed ? 'disabled' : ''}><legend>${escape(content.reflectionQuestion)}</legend>${choices('reflection', content.finalReflections.map((item, i) => ({ ...item, letter: i + 1 })), state.reflection)}</fieldset><label class="takeaway-label" for="takeaway">${escape(content.takeawayQuestion)} <span>(nem kötelező)</span></label><textarea id="takeaway" rows="4" placeholder="Ide írhatod a saját gondolatodat…" ${completed ? 'readonly' : ''}></textarea>${completed ? `<p id="completion-feedback" class="completion-feedback" role="status" tabindex="-1">${escape(content.completionMessage)}</p><div class="actions">${button(content.replayLabel, 'restart', false, true)}</div>` : `<div class="actions">${button(content.finishLabel, 'finish', !canAdvance())}</div>`}</section>`;
+    return `${heading('Bibliai reflexió', 'A döntés a Biblia fényében')}<section class="reflection-panel"><h2 class="panel-title">Mit mutat meg ez a választás?</h2><p class="teaching-text">${escape(ending.teaching)}</p></section>${branchScripture(ending.scripture)}<section class="panel branch-question"><p class="eyebrow">Gondold tovább!</p><p>${escape(ending.question)}</p></section><section class="teaching-panel common-teaching" data-common-teaching><h2>${escape(teaching.title)}</h2><h3 class="common-subtitle">${escape(teaching.subtitle)}</h3><div class="story-text">${paragraphs(teaching.paragraphs)}</div><blockquote class="highlight-quote">„${escape(teaching.highlight)}”</blockquote><p class="scripture-reference">${escape(teaching.highlightReference)}</p></section>${state.completed ? `<p id="completion-feedback" class="completion-feedback" role="status" tabindex="-1">${escape(content.completionMessage)}</p><div class="actions">${button(content.replayLabel, 'restart', false, true)}</div>` : `<div class="actions">${button(content.finishLabel, 'finish')}</div>`}`;
   }
 
   function updateProgress() {
-    const chapters = ['Kezdőoldal', 'A történet', 'Első döntés', 'A négy hang', 'Második döntés', 'Befolyásoló tényező', 'A történet folytatása', 'Bibliai reflexió és közös tanítás', 'Személyes reflexió és lezárás'];
+    const chapters = ['Kezdőoldal', 'A történet', 'Első döntés', 'A négy hang', 'Második döntés', 'A történet folytatása', 'Bibliai reflexió és közös tanítás'];
+    const total = engine.STEPS.length;
     const current = engine.STEPS.indexOf(state.step);
     document.getElementById('chapters').innerHTML = chapters.map((label, i) => `<li class="${i === current ? 'current' : i < current ? 'done' : ''}" ${i === current ? 'aria-current="step"' : ''} aria-label="${i + 1}. képernyő: ${escape(label)}"><span class="chapter-number">${i + 1}</span><span class="chapter-label">${escape(label)}</span></li>`).join('');
-    const value = state.completed ? 9 : current + (state.step === 'voices' ? state.voiceIndex / content.voices.length : 0);
+    const value = state.completed ? total : current + (state.step === 'voices' ? state.voiceIndex / content.voices.length : 0);
     const progress = document.getElementById('progress');
     progress.setAttribute('aria-valuenow', String(value));
-    progress.setAttribute('aria-valuetext', `${current + 1}. képernyő a 9-ből: ${chapters[current]}${state.step === 'voices' ? ', ' + (state.voiceIndex + 1) + '. hang a négyből' : ''}${state.completed ? ', lezárva' : ''}`);
-    document.getElementById('progress-fill').style.width = `${value / 9 * 100}%`;
+    progress.setAttribute('aria-valuemax', String(total));
+    progress.setAttribute('aria-valuetext', `${current + 1}. képernyő a ${total}-ből: ${chapters[current]}${state.step === 'voices' ? ', ' + (state.voiceIndex + 1) + '. hang a négyből' : ''}${state.completed ? ', lezárva' : ''}`);
+    document.getElementById('progress-fill').style.width = `${value / total * 100}%`;
   }
   function updateNotice() {
     const note = document.getElementById('storage-note');
@@ -135,7 +123,7 @@
     }
   }
   function render(moveFocus = true) {
-    const screens = { start: renderStart, situation: renderSituation, initial: () => renderDecision(false), voices: renderVoice, final: () => renderDecision(true), influence: renderInfluence, continuation: renderContinuation, biblical: renderBiblical, reflection: renderReflection };
+    const screens = { start: renderStart, situation: renderSituation, initial: () => renderDecision(false), voices: renderVoice, final: () => renderDecision(true), continuation: renderContinuation, biblical: renderBiblical };
     main.innerHTML = screens[state.step]();
     main.dataset.step = state.step;
     main.dataset.completed = String(state.completed);
@@ -144,8 +132,6 @@
       label.hidden = !versionLabel;
       label.setAttribute('aria-label', `Alkalmazás verziója: ${versionLabel}`);
     });
-    const takeaway = document.getElementById('takeaway');
-    if (takeaway) takeaway.value = state.takeaway;
     document.querySelector('.restart-button').hidden = state.step === 'start';
     updateProgress();
     updateNotice();
@@ -188,11 +174,8 @@
     }
   });
   document.addEventListener('change', event => {
-    const type = { initial: 'SELECT_INITIAL', final: 'SELECT_FINAL', influence: 'SELECT_INFLUENCE', reflection: 'SELECT_REFLECTION' }[event.target.name];
+    const type = { initial: 'SELECT_INITIAL', final: 'SELECT_FINAL' }[event.target.name];
     if (type) dispatch({ type, value: event.target.value }, false);
-  });
-  document.addEventListener('input', event => {
-    if (event.target.id === 'takeaway') dispatch({ type: 'SET_TAKEAWAY', value: event.target.value }, false);
   });
   dialog.addEventListener('close', () => {
     if (dialog.returnValue === 'restart') dispatch({ type: 'RESTART' });

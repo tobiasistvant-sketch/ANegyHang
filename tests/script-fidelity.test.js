@@ -70,7 +70,7 @@ test('Mind a négy folytatás és teljes bibliai magyarázat szó szerint a Word
   }
 });
 
-test('A közös 8/K tanítás és a 9. képernyő reflexiója nem rövidült és nem ismétlődik', () => {
+test('A közös 8/K tanítás és a későbbre félretett reflexiós forrásszöveg változatlan', () => {
   const common = content.commonTeaching;
   assert.equal(common.title, paragraph(241));
   assert.equal(common.subtitle, paragraph(243));
@@ -81,7 +81,8 @@ test('A közös 8/K tanítás és a 9. képernyő reflexiója nem rövidült és
   assert.deepEqual(content.finalReflections.map(item => item.text), [264, 265, 266].map(number => paragraph(number).replace(/^\d+\.\s*/, '')));
   assert.equal(content.takeawayQuestion, paragraph(268));
   assert.equal(content.finishLabel, paragraph(272));
-  assert.ok(paragraph(273).includes('„' + content.completionMessage + '”'));
+  // The v0.3.1 structural instruction overrides the old manuscript's ending.
+  assert.equal(content.completionMessage, 'Az első történet végére értél.');
   assert.ok(paragraph(273).includes('„' + content.replayLabel + '”'));
 });
 

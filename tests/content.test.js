@@ -69,7 +69,7 @@ test('A közös tanítás rövid, látható egység és a lezárás semleges', (
   assert.equal('scripture' in teaching, false);
   assert.equal('closing' in teaching, false);
   assert.equal(content.finishLabel, 'Befejeztem a történetet');
-  assert.equal(content.completionMessage, 'A történet végére értél.');
+  assert.equal(content.completionMessage, 'Az első történet végére értél.');
   assert.equal(content.replayLabel, 'Újrajátszom a történetet');
   assert.ok(!Object.keys(content).some(key => /score|points|ranking/i.test(key)));
 });

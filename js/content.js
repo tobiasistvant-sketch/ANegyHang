@@ -2,6 +2,7 @@
  * A NÉGY HANG – a jóváhagyott, lektorált kilencképernyős szövegkönyv.
  * Forrás: docs/ANegyHang_9_kepernyos_lektoralt_szovegkonyv.docx.
  * A szerkesztői és fejlesztési megjegyzések nem tanulói szövegek.
+ * A v0.3.1 szerkezeti döntése szerint a korábbi 6. és 9. képernyő nem jelenik meg.
  */
 (function (root, factory) {
   'use strict';
@@ -239,7 +240,7 @@
     ],
     "takeawayQuestion": "Mi az az egy gondolat, amelyet ebből a történetből magaddal viszel?",
     "finishLabel": "Befejeztem a történetet",
-    "completionMessage": "A történet végére értél.",
+    "completionMessage": "Az első történet végére értél.",
     "replayLabel": "Újrajátszom a történetet"
   };
 });

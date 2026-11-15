@@ -7,16 +7,16 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
 
-  const VERSION = 2;
+  const VERSION = 3;
   const STORAGE_KEY = 'a_negy_hang_session_v1';
   const STEPS = Object.freeze([
-    'start', 'situation', 'initial', 'voices', 'final', 'influence',
-    'continuation', 'biblical', 'reflection'
+    'start', 'situation', 'initial', 'voices', 'final', 'continuation', 'biblical'
   ]);
   const LEGACY_STEPS = Object.freeze([
     'start', 'situation', 'initial', 'voices', 'final', 'influence',
     'continuation', 'biblical', 'teaching', 'reflection', 'summary'
   ]);
+  const NINE_SCREEN_STEPS = Object.freeze(LEGACY_STEPS.filter(step => step !== 'teaching' && step !== 'summary'));
 
   function createState(storyId = 'wallet') {
     return {
@@ -26,9 +26,7 @@
       voiceIndex: 0,
       initialChoice: null,
       finalChoice: null,
-      influence: null,
-      reflection: null,
-      takeaway: '',
+      decisionChanged: null,
       completed: false
     };
   }
@@ -50,25 +48,34 @@
 
   /** Return a whitelisted state, or null for an incompatible/corrupt save. */
   function normalize(candidate, content) {
-    return normalizeVersion(candidate, content, VERSION, STEPS);
+    if (!validProgress(candidate, content, VERSION, STEPS) || typeof candidate.completed !== 'boolean' ||
+        candidate.decisionChanged !== (candidate.finalChoice === null ? null : candidate.initialChoice !== candidate.finalChoice) ||
+        (candidate.completed && candidate.step !== 'biblical')) return null;
+    return {
+      version: VERSION,
+      storyId: candidate.storyId,
+      step: candidate.step,
+      voiceIndex: candidate.voiceIndex,
+      initialChoice: candidate.initialChoice,
+      finalChoice: candidate.finalChoice,
+      decisionChanged: candidate.decisionChanged,
+      completed: candidate.completed
+    };
   }
 
-  function normalizeVersion(candidate, content, version, steps) {
+  function validProgress(candidate, content, version, steps) {
     if (!candidate || typeof candidate !== 'object' || Array.isArray(candidate) ||
         candidate.version !== version || !steps.includes(candidate.step) ||
-        typeof candidate.storyId !== 'string' || typeof candidate.takeaway !== 'string' ||
-        (version === VERSION && typeof candidate.completed !== 'boolean')) return null;
+        typeof candidate.storyId !== 'string') return false;
     const story = storyFor(candidate.storyId, content);
-    if (!story || !Array.isArray(story.choices) || !Array.isArray(content.voices) || !content.voices.length) return null;
+    if (!story || !Array.isArray(story.choices) || !Array.isArray(content.voices) || !content.voices.length) return false;
     const choices = ids(story.choices);
-    const influences = ids(content.influences);
-    const reflections = ids(content.finalReflections);
     const lastVoice = content.voices.length - 1;
     const index = steps.indexOf(candidate.step);
 
-    if (!Number.isInteger(candidate.voiceIndex) || candidate.voiceIndex < 0 || candidate.voiceIndex > lastVoice) return null;
-    if (index < steps.indexOf('voices') && candidate.voiceIndex !== 0) return null;
-    if (index > steps.indexOf('voices') && candidate.voiceIndex !== lastVoice) return null;
+    if (!Number.isInteger(candidate.voiceIndex) || candidate.voiceIndex < 0 || candidate.voiceIndex > lastVoice) return false;
+    if (index < steps.indexOf('voices') && candidate.voiceIndex !== 0) return false;
+    if (index > steps.indexOf('voices') && candidate.voiceIndex !== lastVoice) return false;
 
     const fieldValid = (value, validIds, earliest, required) => {
       if (index < steps.indexOf(earliest)) return value === null;
@@ -76,37 +83,34 @@
       return value === null || validIds.has(value);
     };
     if (!fieldValid(candidate.initialChoice, choices, 'initial', 'voices') ||
-        !fieldValid(candidate.finalChoice, choices, 'final', 'influence') ||
-        !fieldValid(candidate.influence, influences, 'influence', 'continuation') ||
-        !fieldValid(candidate.reflection, reflections, 'reflection', version === 1 ? 'summary' : null) ||
-        (index < steps.indexOf('reflection') && candidate.takeaway !== '') ||
-        (version === VERSION && candidate.completed &&
-          (candidate.step !== 'reflection' || !reflections.has(candidate.reflection)))) return null;
+        !fieldValid(candidate.finalChoice, choices, 'final', version === VERSION ? 'continuation' : 'influence')) return false;
+    if (version === VERSION) return true;
 
-    const state = {
-      version,
-      storyId: candidate.storyId,
-      step: candidate.step,
-      voiceIndex: candidate.voiceIndex,
-      initialChoice: candidate.initialChoice,
-      finalChoice: candidate.finalChoice,
-      influence: candidate.influence,
-      reflection: candidate.reflection,
-      takeaway: candidate.takeaway
-    };
-    if (version === VERSION) state.completed = candidate.completed;
-    return state;
+    // Check removed answers against the original progression before migration.
+    const reflections = ids(content.finalReflections);
+    return typeof candidate.takeaway === 'string' &&
+      fieldValid(candidate.influence, ids(content.influences), 'influence', 'continuation') &&
+      fieldValid(candidate.reflection, reflections, 'reflection', version === 1 ? 'summary' : null) &&
+      (index >= steps.indexOf('reflection') || candidate.takeaway === '') &&
+      (version === 1 || (typeof candidate.completed === 'boolean' &&
+        (!candidate.completed || (candidate.step === 'reflection' && reflections.has(candidate.reflection)))));
   }
 
   /** Validate the full old progression before converting any removed step. */
   function migrateLegacy(candidate, content) {
-    const legacy = normalizeVersion(candidate, content, 1, LEGACY_STEPS);
-    if (!legacy) return null;
+    const steps = candidate.version === 1 ? LEGACY_STEPS : NINE_SCREEN_STEPS;
+    if (!validProgress(candidate, content, candidate.version, steps)) return null;
+    const step = candidate.step === 'influence' ? 'continuation'
+      : ['teaching', 'reflection', 'summary'].includes(candidate.step) ? 'biblical' : candidate.step;
     return normalize({
-      ...legacy,
       version: VERSION,
-      step: legacy.step === 'teaching' ? 'biblical' : legacy.step === 'summary' ? 'reflection' : legacy.step,
-      completed: legacy.step === 'summary'
+      storyId: candidate.storyId,
+      step,
+      voiceIndex: candidate.voiceIndex,
+      initialChoice: candidate.initialChoice,
+      finalChoice: candidate.finalChoice,
+      decisionChanged: candidate.finalChoice === null ? null : candidate.initialChoice !== candidate.finalChoice,
+      completed: candidate.version === 1 ? candidate.step === 'summary' : candidate.completed
     }, content);
   }
 
@@ -133,13 +137,8 @@
       next.initialChoice = action.value;
     } else if (action.type === 'SELECT_FINAL' && current.step === 'final' && choices.has(action.value)) {
       next.finalChoice = action.value;
-    } else if (action.type === 'SELECT_INFLUENCE' && current.step === 'influence' && ids(content.influences).has(action.value)) {
-      next.influence = action.value;
-    } else if (action.type === 'SELECT_REFLECTION' && current.step === 'reflection' && ids(content.finalReflections).has(action.value)) {
-      next.reflection = action.value;
-    } else if (action.type === 'SET_TAKEAWAY' && current.step === 'reflection' && typeof action.value === 'string') {
-      next.takeaway = action.value;
-    } else if (action.type === 'FINISH' && current.step === 'reflection' && current.reflection) {
+      next.decisionChanged = current.initialChoice !== action.value;
+    } else if (action.type === 'FINISH' && current.step === 'biblical') {
       next.completed = true;
     } else if (action.type === 'NEXT') {
       switch (current.step) {
@@ -149,10 +148,8 @@
           if (current.voiceIndex + 1 < content.voices.length) next.voiceIndex++;
           else next.step = 'final';
           break;
-        case 'final': if (current.finalChoice) next.step = 'influence'; break;
-        case 'influence': if (current.influence) next.step = 'continuation'; break;
+        case 'final': if (current.finalChoice) next.step = 'continuation'; break;
         case 'continuation': next.step = 'biblical'; break;
-        case 'biblical': next.step = 'reflection'; break;
         default: break;
       }
     }
@@ -171,8 +168,7 @@
       storage.setItem(STORAGE_KEY, JSON.stringify({
         version: state.version, storyId: state.storyId, step: state.step,
         voiceIndex: state.voiceIndex, initialChoice: state.initialChoice,
-        finalChoice: state.finalChoice, influence: state.influence,
-        reflection: state.reflection, takeaway: state.takeaway,
+        finalChoice: state.finalChoice, decisionChanged: state.decisionChanged,
         completed: state.completed
       }));
       return true;
@@ -193,7 +189,7 @@
     if (raw !== null) {
       try {
         const candidate = JSON.parse(raw);
-        state = candidate && candidate.version === 1
+        state = candidate && (candidate.version === 1 || candidate.version === 2)
           ? migrateLegacy(candidate, content) : normalize(candidate, content);
       } catch (_) { /* recover below */ }
     }
