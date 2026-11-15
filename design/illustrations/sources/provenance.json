@@ -1,10 +1,9 @@
 {
-  "release_version": "0.2.1",
-  "base_commit": "35f926b29ad140e9fd033c9a26c06762742f27d1",
+  "release_version": "0.2.2",
+  "base_commit": "8a0c0e45359d9ef4228d870b2ac03de1114c93ce",
   "style_reference": "../wallet-opening-sample.png",
-  "approval_manifest": "../review-v0.2.0/manifest.json",
   "previous_provenance": "../review-v0.2.0/prior-v0.2.0-provenance.json",
-  "notes": "Nincs új képgenerálás: a felhasználó által ellenőrzött javítási képek és forrásaik kerültek az aktív állományok helyére. Az elfogadott B kép és a stílusreferencia változatlan. A korábbi aktív források a base_commit Git-előzményben érhetők el.",
+  "notes": "A v0.2.2 négy befejezésképe a felhasználó által jóváhagyott és a megadott commitokban már feltöltött PNG/WebP fájlokat használja változtatás és új képgenerálás nélkül. A korábbi v0.2.1 jóváhagyási archívum történeti előzmény; a hero, nyitójelenet és hangháttér változatlan.",
   "images": [
     {
       "file": "hero-four-paths.png",
@@ -17,37 +16,35 @@
     },
     {
       "file": "wallet-ending-keep-money.png",
-      "source_sha256": "e33aab4eb0498911ef80886c0dc43278abb3a58486c4820975ac86e74ddd1d3f",
-      "runtime_png_sha256": "ad85b5fc0147d4e6d08a3bb677c0a1e1e16532f7a5d38f113232449e474a45bc",
-      "runtime_webp_sha256": "3930eeb32923c64273176a7c45d6fbd3fcc2fd6aaa04b57a7568c19bb50f80d4",
-      "status": "korábban elfogadott; valamennyi képfájl változatlan"
+      "source_sha256": "a144569900f27206aa6cb86911d7babc73e05388f85855e57e123f3859c72331",
+      "runtime_png_sha256": "38c238864f358826426c375f3c01c98c74d68c10673ba60cfc50801e136cce84",
+      "runtime_webp_sha256": "808b7667ef763b9bcc1de48ffa27a7907cf238218c8908b5e09c3e94919914d7",
+      "status": "v0.2.2: jóváhagyott, korábban GitHubra feltöltött kép, változtatás nélkül átvéve",
+      "source_commit": "8a0c0e45359d9ef4228d870b2ac03de1114c93ce"
     },
     {
       "file": "wallet-ending-return-documents.png",
-      "source_sha256": "8b37125ae62075fe0d31b36c57581a2fb383733893d1fa226992955796a0fd58",
-      "runtime_png_sha256": "9d29e994d6f62adfcb9e47a4fcb4c4711afc8169b69d2b802f5587a9bd5b6e5b",
-      "runtime_webp_sha256": "fdc7907ced152683f1d96046aed43b2eda62838bb3e1a082a2cdc47eb3e1ba69",
-      "status": "jóváhagyott javítás; a review-archívumból beépítve",
-      "approved_png": "../review-v0.2.0/wallet-ending-return-documents.png",
-      "generation_record": "../review-v0.2.0/sources/wallet-ending-return-documents.json"
+      "source_sha256": "828edbedc83d7958e946c34760face4d68eb3c07fc17db14c9b4f10e53bdc56c",
+      "runtime_png_sha256": "84bcc1bca02e892c81df0a23c4dc20ed43e5a7971b5d610335243f3f14c0cde5",
+      "runtime_webp_sha256": "6b0af6623baa8f86c4aa62c4638feb9a082fedc9161b1f9feba61f24721e07a5",
+      "status": "v0.2.2: jóváhagyott, korábban GitHubra feltöltött kép, változtatás nélkül átvéve",
+      "source_commit": "8a0c0e45359d9ef4228d870b2ac03de1114c93ce"
     },
     {
       "file": "wallet-ending-return-full.png",
-      "source_sha256": "98d661c9122c65b34ea9a4502f2684d3c79d4283b8b7fef08df65e0c5a4e1765",
-      "runtime_png_sha256": "f18d33e15b43e4a8a01a9a20636c37d3365d24872e32ca3ca9ed4c263b143060",
-      "runtime_webp_sha256": "81329ba4f6a5336dd4bd5cea7a54247310d502410aa37c212ba32c1819c48e2f",
-      "status": "jóváhagyott javítás; a review-archívumból beépítve",
-      "approved_png": "../review-v0.2.0/wallet-ending-return-full.png",
-      "generation_record": "../review-v0.2.0/sources/wallet-ending-return-full.json"
+      "source_sha256": "9183030f04e0801c41dfc35ef66c79d732de810199e35f59d1922d195c7ecf0b",
+      "runtime_png_sha256": "711aa86f469fc5708bb4e9e2cbcdb409b0ac00da3901b31b4e3ea616d53f6d8d",
+      "runtime_webp_sha256": "568e38624685496268cfa4b966e0d642aed98191a5d0041f6e911695c7673da1",
+      "status": "v0.2.2: jóváhagyott, korábban GitHubra feltöltött kép, változtatás nélkül átvéve",
+      "source_commit": "8a0c0e45359d9ef4228d870b2ac03de1114c93ce"
     },
     {
       "file": "wallet-ending-walk-away.png",
-      "source_sha256": "a83969460645026e86c62c3c14586c4c4cad7450a455c6fbe824f5fbd8fc4a2a",
-      "runtime_png_sha256": "e38e647784fcd33d0b3427604762c81b982ae4202989a52c2887e8e73ce27539",
-      "runtime_webp_sha256": "8239701cd6b2b8108095295141ab193d50f022371929660404fb53695f419c56",
-      "status": "jóváhagyott javítás; a review-archívumból beépítve",
-      "approved_png": "../review-v0.2.0/wallet-ending-walk-away.png",
-      "generation_record": "../review-v0.2.0/sources/wallet-ending-walk-away.json"
+      "source_sha256": "2177e8fcf369268105ae5a3587325b98bd14a4455112beef4ef6aaea432ad1dd",
+      "runtime_png_sha256": "53d417bd7fa767d7dbb9279dab1bafe5befd3f2d422b2a5b0e479dbf30786131",
+      "runtime_webp_sha256": "39508822927b78a7a474b9b50df0252bb9c422fa07db18fec498114b12a6ca29",
+      "status": "v0.2.2: jóváhagyott, korábban GitHubra feltöltött kép, változtatás nélkül átvéve",
+      "source_commit": "8a0c0e45359d9ef4228d870b2ac03de1114c93ce"
     },
     {
       "file": "wallet-scene-opening.png",
@@ -67,5 +64,11 @@
       "approved_png": "../review-v0.2.0/wallet-scene-voices.png",
       "generation_record": "../review-v0.2.0/sources/wallet-scene-voices.json"
     }
-  ]
+  ],
+  "previous_release_commit": "94a17d9250288f7bfc4a620d8747eb91d4f2d730",
+  "source_upload_commits": [
+    "961f97af5c0c0535f5fb0b3e15b5edeb7fd4808b",
+    "8a0c0e45359d9ef4228d870b2ac03de1114c93ce"
+  ],
+  "v021_approval_manifest": "../review-v0.2.0/manifest.json"
 }

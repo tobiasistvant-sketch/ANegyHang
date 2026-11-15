@@ -101,7 +101,11 @@ A kék elsődleges gomb sötétített változata a fehér szöveg olvashatóság
 
 A történet és a tanítás alapja a fejlesztési feladatban megadott magyar szöveg. Az igehelyekhez adott magyarázatok összefoglalások, nem szó szerinti bibliai idézetek. A külön idézett parancsolat („Ne lopj!” – 2Mózes 20,15) és a közös tanítás kiemelése („de mindent vizsgáljatok meg: a jót tartsátok meg” – 1Thesszalonika 5,21, részlet) a RÚF 2014 szövegét követi. Az 1Thesszalonika-idézet a felhasználó által megadott részlet; [forrása a Bible.com-on](https://www.bible.com/hu/bible/920/1TH.5.21.R%C3%9AF).
 
-## Illusztrációk – v0.2.1
+## Javítófrissítés – v0.2.2
+
+A `v0.2.2` a GitHubra már feltöltött, felhasználó által jóváhagyott négy új befejezésképet használja: `wallet-ending-return-full`, `wallet-ending-keep-money`, `wallet-ending-return-documents` és `wallet-ending-walk-away`. Az eredeti PNG-k, valamint a játék PNG- és WebP-változatai a meglévő útvonalakon maradtak; nem történt új képgenerálás vagy ismételt képfeltöltés. A C befejezés második bekezdése pontosítja, hogy az iratok visszaadása segítség, de az 500 lejt a játékos megtartotta és elköltötte. A többi történetszöveg és a döntési mechanizmus változatlan.
+
+## Korábbi illusztrációs javítások – v0.2.1
 
 A `v0.2.0` változatban elkészült hét jelenetből a `v0.2.1` hat felhasználó által jóváhagyott grafikai javítást épít be. A kezdőoldal a korábban bemutatott, négyfelé ágazó utat mutató jelöltet használja. A nyitóképen jobban látszik a busz, a négy hang visszafogott hátterén ugyanez a busz szerepel. Az A és C befejezésben fiatalos kéz és felismerhető rendőrségi helyszín látható; a C képen a pénztárcát adják át a benne lévő igazolvánnyal és két bankkártyával. A D képen a pénztárca kisebb, természetes méretű. Az elfogadott B kép minden változata és az eredeti stílusminta változatlan marad. A bibliai és személyes reflexiók szövegközpontúak maradtak. A B befejezés hirdetése továbbra is olvasható HTML-szöveg, nem a kép része.
 

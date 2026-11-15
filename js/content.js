@@ -125,7 +125,7 @@
             title: 'Csak az iratok visszaadása',
             paragraphs: [
               'Az 500 lejt megtartod, de a személyi igazolványt és a bankkártyákat leadod, hogy visszakerülhessenek a tulajdonosukhoz.',
-              'Azzal próbálod megnyugtatni magad, hogy legalább valami jót is tettél. Az iratok visszaadása mellett azonban ott marad a kérdés: mi történt a másik ember pénzével?'
+              'Azzal próbálod megnyugtatni magad, hogy legalább valami jót is tettél. Az iratok visszaadása valóban segítség a tulajdonosnak, de attól még az 500 lejt megtartottad és elköltötted. A helyzet ezért nem oldódott meg teljesen.'
             ],
             teaching: 'Egy helyes cselekedet nem teszi automatikusan helyessé a másikat. A lelkiismeretet önigazolással is elhallgattathatjuk.',
             scripture: {
