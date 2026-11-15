@@ -29,8 +29,8 @@ A jóváhagyott `wallet-opening-sample.png` határozza meg a jelenetcsomag feste
 
 | Webes PNG | Képernyő | Aktív eredeti |
 | --- | --- | --- |
-| [hero-four-paths.png](../../assets/illustrations/hero-four-paths.png) | Általános kezdőoldal, négyfelé ágazó út | [Forrás](sources/hero-four-paths.png) |
-| [wallet-scene-opening.png](../../assets/illustrations/wallet-scene-opening.png) | Történetbemutató és első döntés | [Forrás](sources/wallet-scene-opening.png) |
+| [hero-four-paths.png](../../assets/illustrations/hero-four-paths.png) | Megőrzött korábbi kezdőkép; v0.4.1-től nincs használatban a kezdőoldalon | [Forrás](sources/hero-four-paths.png) |
+| [wallet-scene-opening.png](../../assets/illustrations/wallet-scene-opening.png) | Kezdőoldal, történetbemutató és első döntés | [Forrás](sources/wallet-scene-opening.png) |
 | [wallet-scene-voices.png](../../assets/illustrations/wallet-scene-voices.png) | A négy hang közös, visszafogott háttere | [Forrás](sources/wallet-scene-voices.png) |
 | [wallet-ending-return-full.png](../../assets/illustrations/wallet-ending-return-full.png) | A: a teljes pénztárca átadása | [Forrás](sources/wallet-ending-return-full.png) |
 | [wallet-ending-keep-money.png](../../assets/illustrations/wallet-ending-keep-money.png) | B: hirdetés és az új fejhallgató | [Forrás](sources/wallet-ending-keep-money.png) |

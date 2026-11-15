@@ -297,7 +297,39 @@ async function restoreCurrent(page, story, state, selectingStory = false) {
   expect(await value(page)).toEqual(wrapper);
 }
 
-test('Mind a tizenhárom illusztráció WebP-hibája a megfelelő PNG-re vált', async ({ page }) => {
+for (const pngFallback of [false, true]) test('A kezdőoldali kép, cím és kezdőgomb oldalfrissítés nélkül követi a történetválasztást (' + (pngFallback ? 'PNG-tartalék' : 'WebP') + ')', async ({ page }) => {
+  if (pngFallback) await page.route('**/assets/illustrations/*.webp', route => route.abort());
+  await page.goto('/');
+  await page.evaluate(() => { window.startPageUnchanged = true; });
+  for (const [id, imageId] of [['teacher', 'hero-teacher-paths'], ['wallet', 'wallet-scene-opening'], ['teacher', 'hero-teacher-paths'], ['wallet', 'wallet-scene-opening']]) {
+    const story = content.stories.find(item => item.id === id);
+    await picker(page, id).click();
+    await phase(page, 'start', story);
+    const image = page.locator('.hero-art .hero-scene');
+    if (!pngFallback) await expect(image.locator('source')).toHaveAttribute('srcset', `assets/illustrations/${imageId}.webp`);
+    await expect(image.locator('img')).toHaveAttribute('src', `assets/illustrations/${imageId}.png`);
+    const expectedFile = imageId + (pngFallback ? '.png' : '.webp');
+    await expect.poll(() => image.locator('img').evaluate((img, expected) => img.currentSrc.endsWith('/' + expected) && img.naturalWidth === 1280 && img.naturalHeight === 720, expectedFile)).toBe(true);
+    const size = await image.locator('img').boundingBox();
+    expect(size.width / size.height).toBeCloseTo(16 / 9, 2);
+    await expect(page.locator('.story-label')).toHaveText(story.title);
+    await expect(start(page)).toHaveText(story.start.button);
+    await expect(active(page).locator('[data-illustration="hero-four-paths"]')).toHaveCount(0);
+    expect(await page.evaluate(() => window.startPageUnchanged)).toBe(true);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  }
+  for (const id of ['teacher', 'wallet']) {
+    const story = content.stories.find(item => item.id === id);
+    await picker(page, id).click();
+    await start(page).click();
+    await phase(page, 'situation', story);
+    await expect(page.locator('#screen-title')).toHaveText(story.title);
+    await page.locator('[data-action="choose-story"]').click();
+  }
+  expect(await page.evaluate(() => window.startPageUnchanged)).toBe(true);
+});
+
+test('A játékban használt tizenkét illusztráció WebP-hibája a megfelelő PNG-re vált', async ({ page }) => {
   await page.route('**/assets/illustrations/*.webp', route => route.abort());
   await page.goto('/');
   const seen = new Set();
@@ -314,7 +346,8 @@ test('Mind a tizenhárom illusztráció WebP-hibája a megfelelő PNG-re vált',
       seen.add(id);
     }
   }
-  expect(seen.size).toBe(13);
+  expect(seen.size).toBe(12);
+  expect(seen.has('hero-four-paths')).toBe(false);
 });
 
 for (const story of content.stories) for (const [index, letter] of ['A', 'B', 'C', 'D'].entries()) {

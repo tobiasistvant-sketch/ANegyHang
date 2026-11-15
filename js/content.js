@@ -249,7 +249,7 @@
           "button": "Kezdjük a történetet"
         },
         "images": {
-          "hero": "hero-four-paths",
+          "hero": "wallet-scene-opening",
           "opening": "wallet-scene-opening",
           "voices": "wallet-scene-voices",
           "endings": {
