@@ -1,0 +1,115 @@
+{
+  "base_commit": "35f926b29ad140e9fd033c9a26c06762742f27d1",
+  "status": "felhasználó által jóváhagyott képek; v0.2.1 kiadásba beépítve",
+  "preserved_accepted_image": "assets/illustrations/wallet-ending-keep-money.png",
+  "candidates": [
+    {
+      "file": "hero-four-paths.png",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "sha256": "85aa848e3d28cabe49a4d159304c8f9154ace6b02f440329e6b1c291326c68ed",
+      "source": "sources/hero-four-paths.png",
+      "status": "jóváhagyva; v0.2.1 kiadásba beépítve",
+      "source_sha256": "663a3c36e63172d7ef33f8ecc734ae5dd6a080fd2baee7dbbf56722556b30674",
+      "runtime_png": "assets/illustrations/hero-four-paths.png",
+      "active_source": "design/illustrations/sources/hero-four-paths.png"
+    },
+    {
+      "file": "wallet-scene-opening.png",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "sha256": "8fbf40f8ffa1736628be421cdb018265d61a1dccc8f8e31ba68795b89d9d6790",
+      "source": "sources/wallet-scene-opening.png",
+      "status": "jóváhagyva; v0.2.1 kiadásba beépítve",
+      "source_sha256": "358c51ee3b4fbd7a5273c829539d485ab0a396801dbc44bfd212035d2d4e1a6f",
+      "runtime_png": "assets/illustrations/wallet-scene-opening.png",
+      "active_source": "design/illustrations/sources/wallet-scene-opening.png"
+    },
+    {
+      "file": "wallet-scene-voices.png",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "sha256": "e04431e76b178dc1a2d1e4f2e9fbec40d98e17c002008f9c20d39596698aa185",
+      "source": "sources/wallet-scene-voices.png",
+      "status": "jóváhagyva; v0.2.1 kiadásba beépítve",
+      "source_sha256": "eeef896a3e33da04c00c2e0ff4a1af73ce179cc0adc305ac849cb9bf70e7c9b8",
+      "runtime_png": "assets/illustrations/wallet-scene-voices.png",
+      "active_source": "design/illustrations/sources/wallet-scene-voices.png"
+    },
+    {
+      "file": "wallet-ending-return-full.png",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "sha256": "f18d33e15b43e4a8a01a9a20636c37d3365d24872e32ca3ca9ed4c263b143060",
+      "source": "sources/wallet-ending-return-full.png",
+      "status": "jóváhagyva; v0.2.1 kiadásba beépítve",
+      "source_sha256": "98d661c9122c65b34ea9a4502f2684d3c79d4283b8b7fef08df65e0c5a4e1765",
+      "runtime_png": "assets/illustrations/wallet-ending-return-full.png",
+      "active_source": "design/illustrations/sources/wallet-ending-return-full.png"
+    },
+    {
+      "file": "wallet-ending-return-documents.png",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "sha256": "9d29e994d6f62adfcb9e47a4fcb4c4711afc8169b69d2b802f5587a9bd5b6e5b",
+      "source": "sources/wallet-ending-return-documents.png",
+      "status": "jóváhagyva; v0.2.1 kiadásba beépítve",
+      "source_sha256": "8b37125ae62075fe0d31b36c57581a2fb383733893d1fa226992955796a0fd58",
+      "runtime_png": "assets/illustrations/wallet-ending-return-documents.png",
+      "active_source": "design/illustrations/sources/wallet-ending-return-documents.png"
+    },
+    {
+      "file": "wallet-ending-walk-away.png",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "sha256": "e38e647784fcd33d0b3427604762c81b982ae4202989a52c2887e8e73ce27539",
+      "source": "sources/wallet-ending-walk-away.png",
+      "status": "jóváhagyva; v0.2.1 kiadásba beépítve",
+      "source_sha256": "a83969460645026e86c62c3c14586c4c4cad7450a455c6fbe824f5fbd8fc4a2a",
+      "runtime_png": "assets/illustrations/wallet-ending-walk-away.png",
+      "active_source": "design/illustrations/sources/wallet-ending-walk-away.png"
+    }
+  ],
+  "checks": {
+    "runtime_png_matches_approved": "passed",
+    "active_sources_match_approved": "passed",
+    "application_tests": {
+      "result": "passed",
+      "node_test_entries": 6,
+      "full_decision_paths": 240,
+      "desktop_mobile_browser_tests": 26
+    },
+    "web_assets_decode_and_16_9_dimensions": "passed: 7 PNG + 7 WebP, 1280x720",
+    "protected_B_style_reference_and_approved_originals": "passed",
+    "other_three_repositories_unchanged": "passed"
+  },
+  "review_base_version": "0.2.0",
+  "release_version": "0.2.1",
+  "approval": {
+    "status": "approved",
+    "scope": "hat megőrzött és bemutatott javítás; B változatlan"
+  },
+  "preview_checks": {
+    "png_decode": "passed",
+    "exact_16_9_dimensions": "passed",
+    "preserved_hero_hash": "passed",
+    "application_tests": "not rerun: application code and live assets unchanged",
+    "visual_review": "completed for all five new candidates; human approval pending",
+    "all_preexisting_tracked_files_unchanged": "passed for all four repositories",
+    "preserved_hero_source_hash": "passed",
+    "accepted_B_all_tracked_variants_unchanged": "passed",
+    "head_and_branch_unchanged": "passed"
+  }
+}

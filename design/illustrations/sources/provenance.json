@@ -1,50 +1,71 @@
 {
-  "tool": "image_gen",
+  "release_version": "0.2.1",
+  "base_commit": "35f926b29ad140e9fd033c9a26c06762742f27d1",
   "style_reference": "../wallet-opening-sample.png",
-  "opening_source": "../wallet-opening-sample.png",
-  "notes": "Az eredeti, jóváhagyott nyitókép újragenerálás nélkül került felhasználásra. A hat új eredeti PNG változatlanul megőrizve. A webes képekhez csak képarány-, méret- és formátumoptimalizálás történt.",
-  "generated": [
+  "approval_manifest": "../review-v0.2.0/manifest.json",
+  "previous_provenance": "../review-v0.2.0/prior-v0.2.0-provenance.json",
+  "notes": "Nincs új képgenerálás: a felhasználó által ellenőrzött javítási képek és forrásaik kerültek az aktív állományok helyére. Az elfogadott B kép és a stílusreferencia változatlan. A korábbi aktív források a base_commit Git-előzményben érhetők el.",
+  "images": [
     {
       "file": "hero-four-paths.png",
-      "references": [
-        "../wallet-opening-sample.png"
-      ],
-      "prompt": "Use the supplied illustration ONLY as the visual style, brushwork and color-world reference. Create a NEW 16:9 landscape image for the opening page of an educational decision game for 16–18-year-olds. First-person view standing on one broad pedestrian approach at the bottom foreground, at a landscaped urban park junction. That ONE incoming foreground path splits into EXACTLY FOUR distinct outgoing paths, clearly countable, fanning toward far left, upper-left, upper-right and far right, separated by low planted islands. All four paths remain equally plausible, safe everyday choices; none is presented as the correct or morally superior route. One continues through a softly sunny garden; one has a few tiny, anonymous pedestrians in the distance; one is gently shaded by trees; one is calm and open. Keep the differences subtle with balanced visual emphasis, no threatening darkness and no heavenly glow. Natural spatial layout, warm afternoon light, calm contemporary Central/Eastern European town park setting. NO wallet and NO bus stop in this image. The student's face, gender and identity are not shown. Render as a modern, sophisticated, stylized digitally PAINTED environment illustration with visible fine painterly textures exactly matching the supplied reference, not photorealistic, not 3D, not a cartoon, not a flat vector diagram. Restrained navy, turquoise, warm cream, natural brown/green palette. ABSOLUTELY NO TEXT, numbers, readable signs, road labels, arrows, logos, UI, religious symbols, moral symbols, frames or watermarks. One coherent scene, not four panels. Four outgoing pedestrian branches must remain separately visible."
-    },
-    {
-      "file": "wallet-scene-voices.png",
-      "references": [
-        "../wallet-opening-sample.png"
-      ],
-      "prompt": "Create a quieter variant of the supplied 16:9 painted bus-stop scene. Preserve the SAME recognizable bus stop, the SAME long warm brown wooden bench on the RIGHT with dark navy metal legs, the SAME blue-tinted glass shelter, pale square pavement and street/buildings on the LEFT, and the SAME closed brown stitched leather bifold wallet resting on the ground immediately beside the right bench leg. Keep the first-person viewpoint and geometry almost identical to the reference. This variant will be a subtle shared backdrop while four inner perspectives are read: simplify busy textures and distant detail, soften the contrast and saturation slightly, retain warm natural late-afternoon light and clear but understated silhouettes. It must still look hand-painted with visible delicate brushwork, not a blur filter, not photorealistic or 3D. The wallet and place should be recognizable without stealing attention from later HTML text. No people needed; NO faces, NO floating characters or heads, NO speech bubbles, NO moral symbols, NO lettering or numbers anywhere, NO logos or UI. There are no words over the artwork. Do not add money, cards, symbols, dramatic lighting or any clue as to a good/bad decision. One coherent restrained scene, 16:9 landscape."
-    },
-    {
-      "file": "wallet-ending-return-full.png",
-      "references": [
-        "../wallet-opening-sample.png"
-      ],
-      "prompt": "Create a new 16:9 landscape scene in EXACTLY the same sophisticated digitally painted style, warm natural light, navy/turquoise/brown/cream palette and fine visible brush textures as the supplied bus-stop reference. It is the next scene in the same student's decision story. First-person POV standing at an ordinary municipal police reception/service counter. The student's unidentifiable hand and a simple navy long-sleeve cuff extend the SAME CLOSED medium-brown stitched leather bifold WALLET from the supplied reference across the desk to the receiving hand of a clerk wearing an understated blue sleeve. The wallet should clearly match the reference in brown leather, rounded corners, stitched edge, two-fold shape and proportions. The focus is an everyday wallet handover. A neutral wood/cream reception counter, a simple glass partition and quiet blue-gray office details behind it establish the official setting. Crop everyone above the torso; NO faces or identities visible, no emblems or badges. Only one student's hand and one clerk's hand, believable natural anatomy. A blank small receipt sheet can sit on the desk, but NO visible money, reward, cash exchange, celebration, heroic pose, moral symbolism or dramatic glow. The full closed wallet is being returned intact; its contents need not be visible. Calm, matter-of-fact, responsible everyday mood. NO lettering or numbers on paper, walls, sleeves, objects or signs. No logos, watermarks, UI or text. NOT a photo, not 3D, not comic art."
+      "source_sha256": "663a3c36e63172d7ef33f8ecc734ae5dd6a080fd2baee7dbbf56722556b30674",
+      "runtime_png_sha256": "85aa848e3d28cabe49a4d159304c8f9154ace6b02f440329e6b1c291326c68ed",
+      "runtime_webp_sha256": "1ccf3ba9b54d5b7e67bd2fe86f3d67ba7c0f16870c6474e5fa605fac19b542f6",
+      "status": "jóváhagyott javítás; a review-archívumból beépítve",
+      "approved_png": "../review-v0.2.0/hero-four-paths.png",
+      "generation_record": "../review-v0.2.0/manifest.json"
     },
     {
       "file": "wallet-ending-keep-money.png",
-      "references": [
-        "../wallet-opening-sample.png"
-      ],
-      "prompt": "Create a NEW 16:9 continuation scene of the supplied painted illustration, maintaining the SAME recognizable bus stop: long wooden bench on the right with dark navy supports, blue-tinted glass shelter, pale square sidewalk, warm late-afternoon Central/Eastern European street/buildings on the left. First-person POV a few days later standing naturally in front of the shelter and looking at a newly posted LOST-WALLET NOTICE attached to the shelter's glass. The notice is a clearly visible off-white sheet with a small simple painted picture of the SAME brown stitched bifold wallet near its top and otherwise BLANK paper. ABSOLUTELY NO LETTERS, words, numbers, fake scribbles or readable text anywhere on the sheet or scene. The accurate notice will be separate HTML, never inside this artwork. A newly bought pair of dark navy over-ear HEADPHONES can be subtly visible at the very lower edge, held by one anonymous hand or resting in the top of a plain backpack; no branding and no face or body identity. The real wallet is NOT on the ground or in the student's hands in this scene, since it has been discarded. Only its small illustration is on the blank notice. The visual focus is the notice and the quiet recognition of the situation, not melodramatic guilt. Warm everyday light, same harmonious painted textures as the reference, gently reflective rather than dark or threatening. No ominous shadows, moral symbols, police, victims, tears or frightening faces. NOT photorealistic, not 3D or comic art. No logos, UI, watermarks, signs or type."
+      "source_sha256": "e33aab4eb0498911ef80886c0dc43278abb3a58486c4820975ac86e74ddd1d3f",
+      "runtime_png_sha256": "ad85b5fc0147d4e6d08a3bb677c0a1e1e16532f7a5d38f113232449e474a45bc",
+      "runtime_webp_sha256": "3930eeb32923c64273176a7c45d6fbd3fcc2fd6aaa04b57a7568c19bb50f80d4",
+      "status": "korábban elfogadott; valamennyi képfájl változatlan"
     },
     {
       "file": "wallet-ending-return-documents.png",
-      "references": [
-        "wallet-ending-return-full.png"
-      ],
-      "prompt": "Edit this supplied painted service-counter scene into the alternate story ending where ONLY DOCUMENTS are handed back. Preserve EXACTLY the same warm wood/cream official reception counter, clear glass partition, blue-gray clerk's sleeve, navy student's sleeve and fine hand-painted brushwork/color palette. Keep the first-person viewpoint and calm natural daylight, with faces/identities entirely out of frame. REPLACE the brown wallet in the student's hand with EXACTLY THREE clearly distinct blank cards being handed across to the clerk: one pale ivory identity card and two different bank cards, one muted turquoise and one navy. The three cards are slightly fanned so each is recognizable and countable. The identity card may have only an abstract non-identifying silhouette and simple color fields; NO real portrait, personal data, readable text, letters, account numbers, numbers or logos on ANY card. Hands should remain anatomically natural, one student's hand and one clerk's hand. REMOVE the wallet entirely from this scene. NO banknotes, cash, coins or full wallet contents anywhere. The visual focus is this partial return of three documents, presented matter-of-factly with no moral symbols, praise, reward, accusatory elements or dramatic shadows. The blank receipt sheet and simple office context may remain. NO TEXT, lettering, watermarks, logos or UI anywhere. 16:9 landscape, high-quality modern digitally painted style matching reference, NOT photo, NOT 3D, NOT cartoon."
+      "source_sha256": "8b37125ae62075fe0d31b36c57581a2fb383733893d1fa226992955796a0fd58",
+      "runtime_png_sha256": "9d29e994d6f62adfcb9e47a4fcb4c4711afc8169b69d2b802f5587a9bd5b6e5b",
+      "runtime_webp_sha256": "fdc7907ced152683f1d96046aed43b2eda62838bb3e1a082a2cdc47eb3e1ba69",
+      "status": "jóváhagyott javítás; a review-archívumból beépítve",
+      "approved_png": "../review-v0.2.0/wallet-ending-return-documents.png",
+      "generation_record": "../review-v0.2.0/sources/wallet-ending-return-documents.json"
+    },
+    {
+      "file": "wallet-ending-return-full.png",
+      "source_sha256": "98d661c9122c65b34ea9a4502f2684d3c79d4283b8b7fef08df65e0c5a4e1765",
+      "runtime_png_sha256": "f18d33e15b43e4a8a01a9a20636c37d3365d24872e32ca3ca9ed4c263b143060",
+      "runtime_webp_sha256": "81329ba4f6a5336dd4bd5cea7a54247310d502410aa37c212ba32c1819c48e2f",
+      "status": "jóváhagyott javítás; a review-archívumból beépítve",
+      "approved_png": "../review-v0.2.0/wallet-ending-return-full.png",
+      "generation_record": "../review-v0.2.0/sources/wallet-ending-return-full.json"
     },
     {
       "file": "wallet-ending-walk-away.png",
-      "references": [
-        "../wallet-opening-sample.png"
-      ],
-      "prompt": "Create the next quiet 16:9 scene in this exact painted bus-stop environment. Preserve the SAME long brown wooden bench with dark navy legs on the right, the SAME blue-tinted glass shelter, pale square sidewalk, trees and warm Central/Eastern European street/buildings. The observer is the student, now a few walking steps farther away, glancing BACK toward the bench from first-person POV. The SAME brown stitched leather bifold wallet remains clearly visible ON THE GROUND by the recognizable bench leg. An ordinary anonymous passerby has just noticed it and is bending down/reaching toward it, fingers still a little away from the wallet; do not show the wallet already taken and do not reveal what they will do next. The passerby is secondary and at a little distance, face turned away or cropped/indistinct, wearing ordinary neutral muted clothing with no distinctive logos, mask or villainous styling. The student's own face, gender and identity are never visible. Wider view than the original to show the few steps of distance, but keep the familiar bus stop architecture and wallet easily identifiable. Warm natural afternoon light, calm everyday uncertainty, neither theft imagery nor guilt/punishment imagery. No sinister shadows, police, accusations, religious/moral symbols or drama. Fine visible painterly texture, sophisticated stylized digital environment illustration, same navy/turquoise/brown/cream world as reference, NOT photorealistic, NOT 3D or cartoon. NO text, letters, route numbers, logos, UI, watermarks or captions anywhere."
+      "source_sha256": "a83969460645026e86c62c3c14586c4c4cad7450a455c6fbe824f5fbd8fc4a2a",
+      "runtime_png_sha256": "e38e647784fcd33d0b3427604762c81b982ae4202989a52c2887e8e73ce27539",
+      "runtime_webp_sha256": "8239701cd6b2b8108095295141ab193d50f022371929660404fb53695f419c56",
+      "status": "jóváhagyott javítás; a review-archívumból beépítve",
+      "approved_png": "../review-v0.2.0/wallet-ending-walk-away.png",
+      "generation_record": "../review-v0.2.0/sources/wallet-ending-walk-away.json"
+    },
+    {
+      "file": "wallet-scene-opening.png",
+      "source_sha256": "358c51ee3b4fbd7a5273c829539d485ab0a396801dbc44bfd212035d2d4e1a6f",
+      "runtime_png_sha256": "8fbf40f8ffa1736628be421cdb018265d61a1dccc8f8e31ba68795b89d9d6790",
+      "runtime_webp_sha256": "aa25293930a52240e48248e00435e32d5ed794a177409adba5625acd438eea93",
+      "status": "jóváhagyott javítás; a review-archívumból beépítve",
+      "approved_png": "../review-v0.2.0/wallet-scene-opening.png",
+      "generation_record": "../review-v0.2.0/sources/wallet-scene-opening.json"
+    },
+    {
+      "file": "wallet-scene-voices.png",
+      "source_sha256": "eeef896a3e33da04c00c2e0ff4a1af73ce179cc0adc305ac849cb9bf70e7c9b8",
+      "runtime_png_sha256": "e04431e76b178dc1a2d1e4f2e9fbec40d98e17c002008f9c20d39596698aa185",
+      "runtime_webp_sha256": "c1078150c28feaf0e9f43b4d36dc08633a9f2a52e88e930274ce506d9a91fccf",
+      "status": "jóváhagyott javítás; a review-archívumból beépítve",
+      "approved_png": "../review-v0.2.0/wallet-scene-voices.png",
+      "generation_record": "../review-v0.2.0/sources/wallet-scene-voices.json"
     }
   ]
 }

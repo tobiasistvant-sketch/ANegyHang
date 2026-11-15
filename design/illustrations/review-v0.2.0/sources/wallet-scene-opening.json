@@ -1,0 +1,10 @@
+{
+  "status": "jóváhagyott javítás; v0.2.1 kiadásba beépítve",
+  "file": "wallet-scene-opening.png",
+  "references": [
+    "design/illustrations/wallet-opening-sample.png"
+  ],
+  "prompt": "Make a precise, minimal correction to this supplied painted bus-stop illustration. Preserve the SAME closed brown stitched leather bifold wallet at the SAME size and ground location by the right bench leg, the wooden bench, blue-glass shelter, paving, trees, town buildings, perspective, warm afternoon lighting and visible digital-paint brushwork. Keep the composition and all foreground objects as unchanged as possible. The ONLY meaningful change is to the approaching BUS on the left-hand road: make it more clearly recognizable, approximately 35–45 percent larger in apparent size and a little nearer, with a crisp but painterly front windshield, white/cream upper body, turquoise lower front, clearly identifiable city-bus proportions and a few side windows. It is the SAME everyday single-decker bus design already in the reference, NOT a different vehicle, van, truck or a second bus. It must remain a believable mid-background vehicle roughly 30–40 meters before the bus stop, not already pulling up beside the shelter. Correct street perspective and road scale, travelling toward this stop, so its imminent arrival is clear even in a reduced mobile image. NO route numbers, letters, readable destination signs, logos or license numbers. No new people, headphones, notice sheets, symbols or UI. Do not enlarge or relocate the wallet. Keep the sophisticated stylized digitally painted visual style, not a photograph, 3D or cartoon. One 16:9 landscape image, with NO text, watermarks or framing.",
+  "release_version": "0.2.1",
+  "reference_base_commit": "35f926b29ad140e9fd033c9a26c06762742f27d1"
+}

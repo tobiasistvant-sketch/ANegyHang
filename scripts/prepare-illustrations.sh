@@ -8,9 +8,8 @@ mkdir -p "$illustration_root/assets/illustrations"
 
 for illustration_name in hero-four-paths wallet-scene-opening wallet-scene-voices wallet-ending-return-full wallet-ending-keep-money wallet-ending-return-documents wallet-ending-walk-away; do
   illustration_source="$illustration_root/design/illustrations/sources/$illustration_name.png"
-  if [[ "$illustration_name" == wallet-scene-opening ]]; then
-    illustration_source="$illustration_root/design/illustrations/wallet-opening-sample.png"
-  fi
+  # Current approved originals live together in sources/. The original style
+  # sample stays separate and must not replace the corrected opening scene.
   illustration_target="$illustration_root/assets/illustrations/$illustration_name"
   # Only size/aspect and delivery format change; originals remain untouched.
   magick "$illustration_source" -auto-orient -resize '1280x720^' -gravity center -extent 1280x720 -depth 8 -strip -define png:compression-level=9 "$illustration_target.png"

@@ -1,0 +1,12 @@
+{
+  "status": "jóváhagyott javítás; v0.2.1 kiadásba beépítve",
+  "file": "wallet-scene-voices.png",
+  "references": [
+    "design/illustrations/sources/wallet-scene-voices.png",
+    "design/illustrations/review-v0.2.0/sources/wallet-scene-opening.png"
+  ],
+  "reason": "A látható úttesten a korábbi változatban hiányzott a busz; célzott összhangjavítás.",
+  "prompt": "Produce ONE minimally edited version of the FIRST supplied image, the muted bus-stop backdrop. Use the SECOND supplied image only as an exact reference for the approaching bus. In the FIRST image preserve the SAME quiet low-contrast painterly rendering, camera, wallet, wooden bench, shelter, pavement, trees, buildings and all other details. The ONLY necessary edit is to ADD THE SAME white/cream and turquoise approaching city bus seen in the second image, on the LEFT roadway at the SAME world position, perspective and apparent size as in the second image. The bus remains some distance before the stop and is not beside the bench. Blend it into the FIRST image's soft, desaturated, lower-detail backdrop: recognizable bus silhouette, windows and wheels, but muted enough not to distract from later HTML dialogue. Do NOT increase saturation or contrast of the whole scene, do NOT recreate all the background, do NOT move or resize the brown wallet or the bench. Preserve fine painted textures and warm natural light. No added people, human faces, supernatural figures, personified voices, speech bubbles, headphones, notice sheets, labels or moral imagery. NO text, route numbers, destination lettering, logos, UI or watermarks anywhere. ONE 16:9 landscape digitally painted illustration, no split view or collage.",
+  "release_version": "0.2.1",
+  "reference_base_commit": "35f926b29ad140e9fd033c9a26c06762742f27d1"
+}

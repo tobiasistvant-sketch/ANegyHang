@@ -33,7 +33,7 @@ Az alkalmazás verziójának egyetlen központi forrása a `package.json` **`ver
 A következő kiadáshoz például:
 
 ```sh
-npm version 0.2.1 --no-git-tag-version
+npm version patch --no-git-tag-version
 npm test
 ```
 
@@ -101,13 +101,13 @@ A kék elsődleges gomb sötétített változata a fehér szöveg olvashatóság
 
 A történet és a tanítás alapja a fejlesztési feladatban megadott magyar szöveg. Az igehelyekhez adott magyarázatok összefoglalások, nem szó szerinti bibliai idézetek. A külön idézett parancsolat („Ne lopj!” – 2Mózes 20,15) és a közös tanítás kiemelése („de mindent vizsgáljatok meg: a jót tartsátok meg” – 1Thesszalonika 5,21, részlet) a RÚF 2014 szövegét követi. Az 1Thesszalonika-idézet a felhasználó által megadott részlet; [forrása a Bible.com-on](https://www.bible.com/hu/bible/920/1TH.5.21.R%C3%9AF).
 
-## Illusztrációk – v0.2.0
+## Illusztrációk – v0.2.1
 
-A `v0.2.0` változatban elkészült az általános kezdőoldali illusztráció és az első történet grafikus jelenetcsomagja: összesen hét, az alkalmazásba beépített jelenet. A kezdőoldal négyfelé ágazó utat mutat; a pénztárcás történet a jóváhagyott nyitóképet használja. A négy hang közös, visszafogott háttérképet kapott, a négy befejezés pedig saját illusztrációt. A bibliai és személyes reflexiók szövegközpontúak maradtak. A B befejezés hirdetése továbbra is olvasható HTML-szöveg, nem a kép része.
+A `v0.2.0` változatban elkészült hét jelenetből a `v0.2.1` hat felhasználó által jóváhagyott grafikai javítást épít be. A kezdőoldal a korábban bemutatott, négyfelé ágazó utat mutató jelöltet használja. A nyitóképen jobban látszik a busz, a négy hang visszafogott hátterén ugyanez a busz szerepel. Az A és C befejezésben fiatalos kéz és felismerhető rendőrségi helyszín látható; a C képen a pénztárcát adják át a benne lévő igazolvánnyal és két bankkártyával. A D képen a pénztárca kisebb, természetes méretű. Az elfogadott B kép minden változata és az eredeti stílusminta változatlan marad. A bibliai és személyes reflexiók szövegközpontúak maradtak. A B befejezés hirdetése továbbra is olvasható HTML-szöveg, nem a kép része.
 
 A helyi `assets/illustrations/` mappában minden jelenethez 1280 × 720 képpontos (16:9) PNG és optimalizált WebP tartozik. A böngésző WebP-t használ, hiba esetén PNG-re vált. Ha egyik kép sem töltődik be, a képkeret eltűnik, a történet és a vezérlők továbbra is működnek. Nincs külső képszolgáltatás.
 
-Az eredeti PNG-ket, a jelenetek listáját és a generálási leírásokat a [grafikai dokumentáció](design/illustrations/README.md) őrzi. A webes változatok újra-előállítása ImageMagick 7-tel: `bash scripts/prepare-illustrations.sh`. Ez csak fejlesztői képméret- és formátumoptimalizálás; a játék futtatásához nem szükséges. A jóváhagyott eredeti képet nem generáltuk újra.
+Az aktív eredeti PNG-ket a `design/illustrations/sources/` mappa, a jelenetek listáját és a generálási leírásokat a [grafikai dokumentáció](design/illustrations/README.md) őrzi. Az eredeti `wallet-opening-sample.png` külön, változatlan stílusreferencia; a javított nyitókép aktív eredetije a `sources/wallet-scene-opening.png`. A [jóváhagyási és forrásarchívum](design/illustrations/review-v0.2.0/README.md) megőrzi a felhasználó által elfogadott hat javítást. A webes változatok újra-előállítása ImageMagick 7-tel: `bash scripts/prepare-illustrations.sh`. Ez csak fejlesztői képméret- és formátumoptimalizálás; a játék futtatásához nem szükséges.
 
 ## Későbbi fejlesztés
 

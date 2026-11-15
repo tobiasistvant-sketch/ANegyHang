@@ -8,11 +8,11 @@
   'use strict';
   const descriptions = {
     'hero-four-paths': 'Egy parkosított városi út négy, különböző irányba vezető gyalogos ösvényre ágazik.',
-    'wallet-scene-opening': 'Barna bőrpénztárca hever a buszmegálló padja mellett a délutáni fényben.',
-    'wallet-scene-voices': 'Ugyanaz a buszmegálló és barna pénztárca, visszafogottabb, nyugodt kompozícióban.',
-    'wallet-ending-return-full': 'A barna pénztárcát egy hivatalos átvételi pultnál nyújtod át az ügyintézőnek.',
+    'wallet-scene-opening': 'Barna bőrpénztárca hever a buszmegálló padja mellett, miközben egy busz közeledik az úton.',
+    'wallet-scene-voices': 'Ugyanaz a buszmegálló, barna pénztárca és közeledő busz, visszafogottabb, nyugodt kompozícióban.',
+    'wallet-ending-return-full': 'Fiatal diák keze a barna pénztárcát nyújtja át egy rendőrnek a rendőrségi recepción.',
     'wallet-ending-keep-money': 'A buszmegállóban egy pénztárcát ábrázoló hirdetést nézel; az előtérben az új fejhallgató látszik.',
-    'wallet-ending-return-documents': 'A személyi igazolványt és két bankkártyát adod át egy ügyintézőnek a pultnál.',
+    'wallet-ending-return-documents': 'A kissé nyitott barna pénztárcát adod át a rendőrnek, benne az igazolvánnyal és két bankkártyával.',
     'wallet-ending-walk-away': 'Néhány lépésről visszanézve egy járókelőt látsz lehajolni a pad mellett heverő pénztárcához.'
   };
   return Object.freeze(Object.fromEntries(Object.entries(descriptions).map(([id, alt]) => [id, Object.freeze({

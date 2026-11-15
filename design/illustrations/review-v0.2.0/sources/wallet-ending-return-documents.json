@@ -1,0 +1,15 @@
+{
+  "status": "jóváhagyott javítás; v0.2.1 kiadásba beépítve",
+  "file": "wallet-ending-return-documents.png",
+  "references": [
+    "design/illustrations/review-v0.2.0/sources/wallet-ending-return-full.png"
+  ],
+  "changes": [
+    "Az A javított rendőrségi helyszínével és fiatalos kézzel egyező jelenet",
+    "A pénztárca átadása, benne maradt iratokkal és bankkártyákkal",
+    "Nincs külön átadott kártyacsomag vagy készpénz"
+  ],
+  "prompt": "Make ONE closely matched alternate ending from this supplied revised police-reception painting. Preserve the EXACT SAME first-person camera, warm light, open wooden reception desk, youthful smooth 16–18-year-old student's left hand with navy sweatshirt cuff, receiving uniformed police officer, police shield badge, shoulder radio, cropped face, rear cap, chairs, window and parked blue/white patrol car. Preserve the natural hand sizes and refined visible painted textures. Change ONLY the handover object's condition: the student still hands over the SAME small brown stitched leather BIFOLD WALLET, normal size about 11 x 9 cm when closed, but now it is SLIGHTLY OPEN at roughly 25–35 degrees so an inner card pocket can be seen. Show one pale identity card and two muted navy/turquoise bank cards REMAINING INSERTED INSIDE the wallet's card slots, just their upper parts visible. The brown leather body, stitched edges, hinge and folded wallet silhouette must remain the obvious single object being handed over. Do NOT replace it with a card pack or fan of loose cards, and do NOT show cards being handed over separately. Do not enlarge the wallet or spread it into a giant fully open folio. The cash section contains NO banknotes; no cash, coins or money transfer appear anywhere. If an ID portrait field is visible, use only a non-identifying abstract silhouette; NO personal data, lettering, account numbers, signatures or logos. The student's hand stays youthful, smooth and natural, not veiny, old or wrinkled. The adult officer may have ordinary adult hands. Calm everyday official return, no praise, punishment, heroism or moral symbols. Keep the SAME natural wallet/hand proportions and same police station as the reference. One 16:9 landscape digitally painted image, NOT photo/3D/comic. ABSOLUTELY NO readable text, labels, numbers, logos, UI or watermark anywhere.",
+  "release_version": "0.2.1",
+  "reference_base_commit": "35f926b29ad140e9fd033c9a26c06762742f27d1"
+}

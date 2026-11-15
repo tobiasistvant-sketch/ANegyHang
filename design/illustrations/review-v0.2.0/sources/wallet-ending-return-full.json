@@ -1,0 +1,15 @@
+{
+  "status": "jóváhagyott javítás; v0.2.1 kiadásba beépítve",
+  "file": "wallet-ending-return-full.png",
+  "references": [
+    "design/illustrations/sources/wallet-ending-return-full.png"
+  ],
+  "changes": [
+    "Fiatalos középiskolás kéz",
+    "Felismerhető rendőrségi recepció és egyenruhás átvevő",
+    "Természetes méretarányú, teljes barna pénztárca átadása"
+  ],
+  "prompt": "Correct this painted story illustration substantially in THREE specific ways while retaining its warm natural afternoon light, fine digital-paint texture, navy/cream/brown palette and first-person wallet-handover idea. 1) The foreground student's hand must clearly be a normal 16–18-year-old older teenager's hand: smooth youthful skin, slender natural proportions and minimal creases, NO prominent veins, deep wrinkles, aged knuckles or weathered adult texture; not a small child's hand. A simple navy sweatshirt cuff, no identifying jewelry, no face or gender cues. 2) Make the setting unmistakably an ordinary POLICE STATION RECEPTION rather than a generic bank/office teller window. Show the receiving officer's upper torso in a recognizable navy police uniform with epaulettes, a silver police shield badge and shoulder radio/microphone; crop the face out above the collar. A police peaked cap can lie unobtrusively on the rear counter, and a small blue-and-white patrol car with a roof lightbar can be seen outside the daylight window. No weapons or emergency drama, no readable uniform lettering, no real insignia text or personal names. Use an OPEN reception counter, not a bank-style cash-teller booth. Preserve calm cream/wood office surroundings. 3) The student hands over the SAME brown stitched leather bifold wallet, CLOSED and intact, but at a believable everyday size about 11 by 9 cm, comfortably held in ONE teenage hand, shorter than wrist-to-fingertip hand length and only about one-and-a-half palm widths. Do NOT make it an oversized purse or giant rectangular wallet. One natural teen hand offers it and one natural adult officer hand receives it. A blank receipt sheet may remain on the desk. No money exchange, reward, banknotes, loose cards, celebration, glowing heroism or moral symbols. Compose at a natural counter distance, slightly less macro-close than the reference, so hand/wallet proportions are believable and the police reception is visible. Keep the elegant painterly visual style, not photorealism, not 3D or comic art. One 16:9 landscape image. NO text, numbers, labels, logos, UI or watermark anywhere.",
+  "release_version": "0.2.1",
+  "reference_base_commit": "35f926b29ad140e9fd033c9a26c06762742f27d1"
+}

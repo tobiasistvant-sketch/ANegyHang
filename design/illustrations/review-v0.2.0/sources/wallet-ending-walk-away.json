@@ -1,0 +1,14 @@
+{
+  "status": "jóváhagyott javítás; v0.2.1 kiadásba beépítve",
+  "file": "wallet-ending-walk-away.png",
+  "references": [
+    "design/illustrations/sources/wallet-ending-walk-away.png"
+  ],
+  "changes": [
+    "Kb. 11×9 cm-es összehajtott pénztárcának megfelelő arány a kézhez, cipőhöz és járdakőhöz",
+    "A buszmegálló és jelenet megőrzése"
+  ],
+  "prompt": "Make a targeted object-scale correction to this supplied 16:9 digitally painted bus-stop scene. Preserve as closely as possible the SAME bench, shelter, street, distant bus, trees, paving pattern, warm sunlight, navy/turquoise/brown palette, first-person observer position and anonymous passerby bending toward the ground. The problem is that the wallet on the ground is FAR TOO LARGE. Replace it at the SAME ground center/orientation near the bench leg with the SAME closed brown stitched leather bifold wallet at a realistic everyday physical size, about 11 x 9 cm. Its apparent width should be roughly an adult palm's width and LESS THAN HALF the apparent length of the nearby adult shoe at comparable depth; about a quarter of one large paving tile's width, not most of a tile. Reduce the current depicted wallet width by roughly 55–60 percent, adjusting its contact shadow naturally. It must still be recognizably a small folded brown leather wallet, not a phone, suitcase or giant purse. Keep it lying on the pavement, not already lifted. The passerby's hand should be naturally reaching toward this correctly scaled wallet, with believable body/arm/finger proportions and balanced planted feet; only tiny posture correction if needed. No exaggerated long fingers or anatomical distortion. The passerby's face remains turned away/indistinct, the observing student's identity and face are absent. Do NOT recompose the whole scene, change the surroundings or invent a new character; preserve the current ordinary, nonjudgmental uncertain moment. No theft/villain cues, police, dramatic shadows, supernatural or moral symbols. Same sophisticated visible painterly textures, NOT a photo, NOT 3D, NOT a cartoon. NO readable text, route numbers, logos, labels, UI or watermark.",
+  "release_version": "0.2.1",
+  "reference_base_commit": "35f926b29ad140e9fd033c9a26c06762742f27d1"
+}
